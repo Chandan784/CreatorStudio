@@ -1,101 +1,126 @@
-import Image from "next/image";
+// nextjs_studio_booking/src/app/index.js
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+
+const sampleStudios = [
+  {
+    _id: "1",
+    name: "Cozy Studio",
+    address: "12 MG Road, Bangalore",
+    price: 50,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+  {
+    _id: "2",
+    name: "Modern Loft",
+    address: "34 Whitefield, Bangalore",
+    price: 75,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+  {
+    _id: "3",
+    name: "Artistic Space",
+    address: "56 Koramangala, Bangalore",
+    price: 60,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+  {
+    _id: "4",
+    name: "Cozy Studio",
+    address: "12 MG Road, Bangalore",
+    price: 50,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+  {
+    _id: "5",
+    name: "Modern Loft",
+    address: "34 Whitefield, Bangalore",
+    price: 75,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+  {
+    _id: "6",
+    name: "Artistic Space",
+    address: "56 Koramangala, Bangalore",
+    price: 60,
+    location: "Bangalore",
+    image:
+      "https://media.istockphoto.com/id/1665390175/photo/headphones-and-mic-at-the-radio-station.webp?a=1&b=1&s=612x612&w=0&k=20&c=muf1pjSHx4jzNgxQ9_MdBgl7fWhFGqWlQg7p_84Ri1c=",
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [studios, setStudios] = useState(sampleStudios);
+  const [location, setLocation] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const filterStudios = () => {
+    if (location) {
+      const filtered = sampleStudios.filter((studio) =>
+        studio.location.toLowerCase().includes(location.toLowerCase())
+      );
+      setStudios(filtered);
+    } else {
+      setStudios(sampleStudios);
+    }
+  };
+
+  return (
+    <div className="min-h-screen p-5 bg-gray-100">
+      <h1 className="text-3xl font-bold text-center mb-5">
+        Find Studios Near You
+      </h1>
+      <div className="flex justify-center mb-5">
+        <input
+          type="text"
+          placeholder="Enter location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="p-2 border rounded-l-md"
+        />
+        <button
+          onClick={filterStudios}
+          className="p-2 bg-blue-500 text-white rounded-r-md"
+        >
+          Search
+        </button>
+      </div>
+      {studios.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {studios.map((studio) => (
+            <div
+              key={studio._id}
+              className="bg-white p-5 rounded-md shadow-md hover:shadow-lg"
+            >
+              <img
+                src={studio.image}
+                alt={studio.name}
+                className="w-full h-32 object-cover rounded-md mb-3"
+              />
+              <h2 className="text-xl font-semibold">{studio.name}</h2>
+              <p className="text-gray-600">{studio.address}</p>
+              <p className="text-gray-800 font-bold">${studio.price}/hour</p>
+              <Link href={`/studios/${studio._id}`} legacyBehavior>
+                <a className="text-blue-500 underline">View Details</a>
+              </Link>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ) : (
+        <p className="text-center">No studios found.</p>
+      )}
     </div>
   );
 }
+
+// Removed API route, model, and database connection logic as they are no longer needed.
