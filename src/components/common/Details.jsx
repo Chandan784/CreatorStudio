@@ -4,7 +4,7 @@ import { FaMapMarkerAlt, FaHotel, FaBed, FaUserFriends } from "react-icons/fa";
 const Details = () => {
   return (
     <>
-        <div className='pt-80 lg:pt-10 grid grid-cols-2 lg:grid-cols-4 gap-5 text-center'>
+        <div className='pt-80 mb-10 lg:pt-10 grid grid-cols-2 lg:grid-cols-4 gap-5 text-center'>
             <div>
             <span className="flex justify-center text-red-600 mb-2 text-4xl">
             <FaMapMarkerAlt />
@@ -31,7 +31,7 @@ const Details = () => {
             <FaUserFriends />
           </span>
               <h3 className='font-bold text-4xl'>90M+</h3>
-              <p className='text-3xl'>OYO Guests</p>
+              <p className='text-3xl'>Amilo Guests</p>
             </div>
         </div>
     </>
