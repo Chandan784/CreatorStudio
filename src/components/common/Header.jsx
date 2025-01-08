@@ -3,39 +3,73 @@ import React, { useState } from "react";
 import { FaEnvelope, FaPhone } from "react-icons/fa";
 
 const Header = () => {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    mobile: "",
+    city: "",
+  });
 
-  const handleOptionChange = (e) => {
-    setSelectedOption(e.target.value);
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Your details have been submitted successfully!");
+        setFormData({ name: "", mobile: "", city: "" });
+      } else {
+        alert("Failed to submit details. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while submitting the form.");
+    }
   };
 
   return (
     <>
-      <div>
-        <div className="relative bg-[url('https://prod-disc-disc-part.s3-ap-southeast-1.amazonaws.com/oyo_big_image_MOBILE.jpg')] bg-cover bg-center h-screen p-4">
-          {/* Header Section */}
+      <div className="h-screen">
+        <div className="relative bg-[url('https://images.unsplash.com/photo-1598016677484-ad34c3fd766e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3R1ZGlvfGVufDB8fDB8fHww')] bg-cover bg-center h-5/6 p-4">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-red-600 font-extrabold text-3xl">Amilo</h1>
             <div className="flex space-x-4">
-              {/* Email Icon */}
               <span className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gray-400 text-gray-800 bg-white">
                 <FaEnvelope size={20} />
               </span>
-
-              {/* Phone Icon */}
               <span className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gray-400 text-gray-800 bg-white">
                 <FaPhone size={20} />
               </span>
             </div>
           </div>
 
-          {/* Form Section */}
           <div className="absolute top-full left-1/2 lg:top-2/4 lg:left-3/4 transform -translate-x-1/2 -translate-y-1/2">
-            <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Become an OYO</h2>
+            <form
+              className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto"
+              onSubmit={handleSubmit}
+            >
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+                Become an Amilo
+              </h2>
 
-              {/* Name Input */}
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Name
               </label>
               <input
@@ -43,34 +77,37 @@ const Header = () => {
                 type="text"
                 placeholder="Enter your name"
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
+                value={formData.name}
+                onChange={handleChange}
               />
 
-              {/* Mobile Number Input */}
-              <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="mobile"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Mobile Number
               </label>
               <div className="flex mb-4">
-                {/* Country Code */}
                 <select
                   id="country-code"
                   className="p-2 border rounded-l-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
                   <option value="+91">+91</option>
-                  <option value="+20">+20</option>
-                  <option value="+1">+1</option>
                 </select>
-
-                {/* Mobile Number */}
                 <input
                   id="mobile"
                   type="text"
                   placeholder="Enter your mobile number"
                   className="flex-1 p-2 border border-l-0 rounded-r-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  value={formData.mobile}
+                  onChange={handleChange}
                 />
               </div>
 
-              {/* City Input */}
-              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="city"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 City
               </label>
               <input
@@ -78,54 +115,10 @@ const Header = () => {
                 type="text"
                 placeholder="Enter your city"
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
+                value={formData.city}
+                onChange={handleChange}
               />
 
-              {/* Hotel/Home Option */}
-              <div className="flex justify-start items-center bg-gray-100 p-2 rounded-md mb-6 space-x-4">
-                {/* Hotel Option */}
-                <label className="flex flex-col items-center space-y-1 cursor-pointer w-32">
-                  <input
-                    type="radio"
-                    name="option"
-                    value="hotel"
-                    checked={selectedOption === "hotel"}
-                    onChange={handleOptionChange}
-                    className="hidden"
-                  />
-                  <div
-                    className={`w-full h-16 flex items-center justify-center border-2 ${
-                      selectedOption === "hotel"
-                        ? "border-green-500 bg-green-500 text-white"
-                        : "border-gray-400 bg-white text-green-500"
-                    } rounded-md hover:bg-green-500 hover:text-white transition`}
-                  >
-                    <span className="mr-2">🏨</span> <span>Hotel</span>
-                  </div>
-                </label>
-
-                {/* Home Option */}
-                <label className="flex flex-col items-center space-y-1 cursor-pointer w-32">
-                  <input
-                    type="radio"
-                    name="option"
-                    value="home"
-                    checked={selectedOption === "home"}
-                    onChange={handleOptionChange}
-                    className="hidden"
-                  />
-                  <div
-                    className={`w-full h-16 flex items-center justify-center border-2 ${
-                      selectedOption === "home"
-                        ? "border-blue-500 bg-blue-500 text-white"
-                        : "border-gray-400 bg-white text-blue-500"
-                    } rounded-md hover:bg-blue-500 hover:text-white transition`}
-                  >
-                    <span className="mr-2">🏠</span> <span>Home</span>
-                  </div>
-                </label>
-              </div>
-
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition"
@@ -133,7 +126,6 @@ const Header = () => {
                 REQUEST A CALL
               </button>
 
-              {/* Privacy Policy */}
               <p className="text-xs text-center text-gray-500 mt-4">
                 By sharing your details, you agree to our{" "}
                 <a href="#" className="text-blue-500 underline">
