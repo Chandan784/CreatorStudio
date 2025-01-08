@@ -27,7 +27,7 @@ const StepsToPartner = () => {
             <p className='text-1xl pb-10'>Onboarding with Amilo is a hassle-free three step process</p>
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-10 pt-5 mx-10 text-center items-center'>
                 {step.map((e,index)=>(
-                    <div key={index} >
+                    <div key={index} className='flex flex-col items-center' >
                         <img src={e.imgSrc} alt="" className='w-2/3 pb-8' />
                         <h2 className='font-bold pt-2 text-2xl'>{e.title}</h2>
                         <p className='text-1xs'>{e.data}</p>
