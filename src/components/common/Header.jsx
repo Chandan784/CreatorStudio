@@ -1,9 +1,9 @@
-"use client"
-import React, { useState } from 'react';
-import { FaEnvelope, FaPhone } from 'react-icons/fa';
+"use client";
+import React, { useState } from "react";
+import { FaEnvelope, FaPhone } from "react-icons/fa";
 
 const Header = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState("");
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <>
       <div>
-        <div className="bg-[url('https://prod-disc-disc-part.s3-ap-southeast-1.amazonaws.com/oyo_big_image_MOBILE.jpg')] bg-cover bg-center h-screen p-4">
+        <div className="relative bg-[url('https://prod-disc-disc-part.s3-ap-southeast-1.amazonaws.com/oyo_big_image_MOBILE.jpg')] bg-cover bg-center h-screen p-4">
           {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-red-600 font-extrabold text-3xl">Amilo</h1>
@@ -30,7 +30,7 @@ const Header = () => {
           </div>
 
           {/* Form Section */}
-          <div>
+          <div className="absolute top-full left-1/2 lg:top-2/4 lg:left-3/4 transform -translate-x-1/2 -translate-y-1/2">
             <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Become an OYO</h2>
 
@@ -82,40 +82,42 @@ const Header = () => {
 
               {/* Hotel/Home Option */}
               <div className="flex justify-start items-center bg-gray-100 p-2 rounded-md mb-6 space-x-4">
+                {/* Hotel Option */}
                 <label className="flex flex-col items-center space-y-1 cursor-pointer w-32">
                   <input
                     type="radio"
                     name="option"
                     value="hotel"
-                    checked={selectedOption === 'hotel'}
+                    checked={selectedOption === "hotel"}
                     onChange={handleOptionChange}
                     className="hidden"
                   />
                   <div
                     className={`w-full h-16 flex items-center justify-center border-2 ${
-                      selectedOption === 'hotel'
-                        ? 'border-green-500 bg-green-500 text-white'
-                        : 'border-gray-400 bg-white text-green-500'
+                      selectedOption === "hotel"
+                        ? "border-green-500 bg-green-500 text-white"
+                        : "border-gray-400 bg-white text-green-500"
                     } rounded-md hover:bg-green-500 hover:text-white transition`}
                   >
                     <span className="mr-2">🏨</span> <span>Hotel</span>
                   </div>
                 </label>
 
+                {/* Home Option */}
                 <label className="flex flex-col items-center space-y-1 cursor-pointer w-32">
                   <input
                     type="radio"
                     name="option"
                     value="home"
-                    checked={selectedOption === 'home'}
+                    checked={selectedOption === "home"}
                     onChange={handleOptionChange}
                     className="hidden"
                   />
                   <div
                     className={`w-full h-16 flex items-center justify-center border-2 ${
-                      selectedOption === 'home'
-                        ? 'border-blue-500 bg-blue-500 text-white'
-                        : 'border-gray-400 bg-white text-blue-500'
+                      selectedOption === "home"
+                        ? "border-blue-500 bg-blue-500 text-white"
+                        : "border-gray-400 bg-white text-blue-500"
                     } rounded-md hover:bg-blue-500 hover:text-white transition`}
                   >
                     <span className="mr-2">🏠</span> <span>Home</span>
@@ -133,7 +135,7 @@ const Header = () => {
 
               {/* Privacy Policy */}
               <p className="text-xs text-center text-gray-500 mt-4">
-                By sharing your details, you agree to our{' '}
+                By sharing your details, you agree to our{" "}
                 <a href="#" className="text-blue-500 underline">
                   privacy policy
                 </a>
