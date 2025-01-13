@@ -1,42 +1,25 @@
-import React from 'react'
+import Image from 'next/image'
+import { STEP_CARD_LIST } from '../common/Helper'
 
 const StepsToPartner = () => {
-
-    const step = [
-        {
-            title: "Step 1",
-            imgSrc:'/assets/images/home/partner_with_oyo_step_1.png',
-            data:"Enter your details and we will call you to discuss the right solution for your asset"
-        },
-        {
-            title: "Step 2",
-            imgSrc:'/assets/images/home/partner_with_oyo_step_2.png',
-            data:"Sign up with Amilo"
-        },
-        {
-            title: "Step 3",
-            imgSrc:'/assets/images/home/partner_with_oyo_step_3.png',
-            data:"Onboard Amilo technology suite for hassle-free operations"
-        }
-    ]
-
-  return (
-    <>
-        <div className='text-center py-14'>
-            <h3 className='text-3xl font-bold'>Steps to Partner with Amilo</h3>
-            <p className='text-1xl pb-10'>Onboarding with Amilo is a hassle-free three step process</p>
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-10 pt-5 mx-10 text-center items-center'>
-                {step.map((e,index)=>(
-                    <div key={index} className='flex flex-col items-center' >
-                        <img src={e.imgSrc} alt="" className='w-2/3 pb-8' />
-                        <h2 className='font-bold pt-2 text-2xl'>{e.title}</h2>
-                        <p className='text-1xs'>{e.data}</p>
-                    </div>
-                ))}
+    return (
+        <>
+            <div className='text-center py-16 md:py-[70px] lg:py-20 max-w-[1200px] px-4 xl:px-0 mx-auto'>
+                <h3 className='text-3xl font-bold'>Steps to Partner with Amilo</h3>
+                <p className='md:text-lg text-base pb-10'>Onboarding with Amilo is a hassle-free three step process</p>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-6 pt-5 text-center items-center'>
+                    {STEP_CARD_LIST.map((obj, index) => (
+                        <div key={index} className='flex flex-col items-center' >
+                            <Image src={obj.imgSrc} alt='dummy' height={300} />
+                            <img src={obj.imgSrc} alt="" className='w-2/3 pb-8' />
+                            <h2 className='font-bold pt-2 text-2xl'>{obj.title}</h2>
+                            <p className='text-xs md:text-base text-black text-opacity-70'>{obj.data}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
-    </>
-  )
+        </>
+    )
 }
 
 export default StepsToPartner

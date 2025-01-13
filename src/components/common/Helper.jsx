@@ -37,3 +37,21 @@ export const WHY_JOIN_CARD_LIST = [
         description: "AmiloAi branded channels and other online channel integrations",
     },
 ]
+
+export  const STEP_CARD_LIST = [
+    {
+        title: "Step 1",
+        imgSrc: '/assets/images/home/partner_with_oyo_step_1.png',
+        data: "Enter your details and we will call you to discuss the right solution for your asset"
+    },
+    {
+        title: "Step 2",
+        imgSrc: '/assets/images/home/partner_with_oyo_step_2.png',
+        data: "Sign up with Amilo"
+    },
+    {
+        title: "Step 3",
+        imgSrc: '/assets/images/home/partner_with_oyo_step_3.png',
+        data: "Onboard Amilo technology suite for hassle-free operations"
+    }
+]
