@@ -10,8 +10,7 @@ const StepsToPartner = () => {
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-6 pt-5 text-center items-center'>
                     {STEP_CARD_LIST.map((obj, index) => (
                         <div key={index} className='flex flex-col items-center' >
-                            <Image src={obj.imgSrc} alt='dummy' height={300} />
-                            <img src={obj.imgSrc} alt="" className='w-2/3 pb-8' />
+                            <Image src={obj.imgSrc} alt='dummy' height={300} width={300} className='max-w-[200px] mx-auto' />
                             <h2 className='font-bold pt-2 text-2xl'>{obj.title}</h2>
                             <p className='text-xs md:text-base text-black text-opacity-70'>{obj.data}</p>
                         </div>

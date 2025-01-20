@@ -7,10 +7,9 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+      backgroundImage: {
+        check: "url('/assets/images/home/webp/people-check-in.webp')"
+      }
     },
   },
   plugins: [],
