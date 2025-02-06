@@ -1,6 +1,6 @@
 "use client";
 
-import Icons from "./common/Icon";
+import Icons from "../common/Icon";
 
 
 const initialScenes = [
