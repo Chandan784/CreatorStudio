@@ -62,6 +62,13 @@ const Icons = ({ icon, className }) => {
                 </g>
             </svg>
         ),
+        dotsMenu: (
+            <svg width="6" height="24" viewBox="0 0 6 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="3" cy="3" r="3" fill="#615F5F" />
+                <circle cx="3" cy="20.647" r="3" fill="#615F5F" />
+                <circle cx="3" cy="11.8235" r="3" fill="#615F5F" />
+            </svg>
+        ),
 
 
     };
