@@ -13,12 +13,12 @@ const RecomendedPlans = () => {
                 
                 <Slideer/>
 
-                <div className=''>
+                <div className=''>  
                     <div className='pb-2'>
                         <button className='absolute bottom-16 right-12 left-12   bg-violet-600 hover:bg-violet-800 rounded-md px-16 py-2 text-white font-semibold '>See all plans</button>
                         
                     </div>
-                    <div className=' absolute bottom-5 right-12 left-12 border-2 border-violet-700  rounded-lg'> 
+                    <div className=' absolute bottom-5 right-12 left-12 border border-violet-700  rounded-lg'> 
                         <h2 className='pl-10 pt-1 pb-1 font-bold '>Create custom Plan</h2>
                     </div>
                 </div>
