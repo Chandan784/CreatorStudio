@@ -26,7 +26,7 @@ const BottomNav = () => {
             pathname === item.route ? "text-blue-500" : "text-gray-500"
           }`}
         >
-          <div className="text-lg">{item.icon}</div>
+          <div className="text-lg ">{item.icon}</div>
           <p className="text-xs mt-1">{item.label}</p>
         </button>
       ))}

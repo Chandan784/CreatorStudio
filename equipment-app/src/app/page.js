@@ -11,8 +11,8 @@ export default function Home() {
       <Header/>
 
       {/* Banner */}
-      <section className="mt-4">
-        <div className="relative rounded-lg overflow-hidden mx-4">
+      <section className="">
+        <div className="relative rounded-lg overflow-hidden ">
           <img src="/images.jpg" alt="Banner" className="w-full h-40 object-cover" />
           <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center">
             <h2 className="text-white text-lg font-bold">BUY STUDIO EQUIPMENT</h2>
@@ -34,7 +34,11 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-4 mt-4">
       
           <EquipmentCard title="Mirrorless Camera" price="$69.69" img="/download.jpg"/>
-          <EquipmentCard title="Microphone" price="$49.99" img="/download(1).jpg"/>
+          <EquipmentCard title="Microphone" price="$49.99" img="/download1.jpg"/>
+          <EquipmentCard title="Microphone" price="$49.99" img="/download1.jpg"/>
+          <EquipmentCard title="Microphone" price="$49.99" img="/download1.jpg"/>
+          <EquipmentCard title="Microphone" price="$49.99" img="/download1.jpg"/>
+          <EquipmentCard title="Microphone" price="$49.99" img="/download1.jpg"/>
           
         </div>
       </section>
