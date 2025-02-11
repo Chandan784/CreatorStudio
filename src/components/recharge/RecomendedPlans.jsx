@@ -7,7 +7,7 @@ const RecomendedPlans = () => {
     <>
         <div className='bg-white h-full ps-4 pb-20'>
             
-            <div className='bg-gray-300 h-96 w-80 ps-8 rounded-lg relative '>
+            <div className='bg-gray-200 h-96 w-80 ps-8 shadow-lg rounded-lg relative '>
             
                 <h2 className='font-bold font-sans text-sm text-black pt-8 '>Recommended Plans</h2>
                 

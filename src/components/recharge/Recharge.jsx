@@ -16,7 +16,7 @@ const Recharge = () => {
                 <h2 className='text-black text-xs  font-sans pb-3'>You can still catch up by buying more credits</h2>
             </div>
             <div>
-                <button className='bg-violet-600 hover:bg-violet-600 text-white font-sans text-sm px-11 '>Get 15 more credits at 35% off</button>
+                <button className='bg-[#a52cc9] hover:bg-violet-600 text-white font-sans text-sm px-12 rounded-lg py-1 '>Get 15 more credits at 35% off</button>
             </div>
         </div>
                 
