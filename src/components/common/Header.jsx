@@ -55,6 +55,7 @@ const Header = () => {
             <a href="#" className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-gray-400 text-gray-800 bg-white">
             <Icons icon={"phonecall"}/>
             </a>
+           <p>hii hello</p>
           </div>
         </div>
         <form
