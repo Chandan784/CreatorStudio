@@ -1,4 +1,4 @@
-const Icons = ({ icon, className }) => {
+const Icons = ({ icon, params }) => {
     const ICONS_LIST = {
         menuToggel: (
             <svg
@@ -71,7 +71,7 @@ const Icons = ({ icon, className }) => {
         ),
         star: (
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.5001 18.6784L18.6801 22.4084L17.0401 15.3784L22.5001 10.6484L15.3101 10.0384L12.5001 3.40845L9.69006 10.0384L2.50006 10.6484L7.96006 15.3784L6.32006 22.4084L12.5001 18.6784Z" fill="black" fill-opacity="0.6" />
+                <path className={`${params && 'fill-[#1976D2]'}`} d="M12.5001 18.6784L18.6801 22.4084L17.0401 15.3784L22.5001 10.6484L15.3101 10.0384L12.5001 3.40845L9.69006 10.0384L2.50006 10.6484L7.96006 15.3784L6.32006 22.4084L12.5001 18.6784Z" fill="black" fillOpacity="0.6" />
             </svg>
 
         ),
