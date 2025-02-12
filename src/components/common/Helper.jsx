@@ -55,3 +55,34 @@ export  const STEP_CARD_LIST = [
         data: "Onboard Amilo technology suite for hassle-free operations"
     }
 ]
+
+export const VIDEO_TITLE_DATA_LIST = [
+    {
+        tabName: "script",
+        first: "Creative Direction",
+        second: "Typography & Layout",
+        third: "Illustration",
+        four: "Web/UI Design",
+        firstDescription: "Crafting unique concepts for branding, web, and print.",
+        secondDescription: "Knowing how to balance fonts, whitespace, and visual hierarchy to create clean designs.",
+        thirdDescription: "Creating vector-based designs and custom illustrations.",
+        fourDescription: "Designing user-friendly and visually appealing interfaces using Figma or Adobe XD.",
+    },
+    {
+        tabName: "footage",
+        first: "The Learning Station",
+        second: "Code Wide (P) Ltd.",
+        firstDescription: "one year experience as graphic-designer",
+        secondDescription: "3 months internship as UX/UI designer",
+    },
+    {
+        tabName: "output",
+        first: "10th Pass Out",
+        second: "12th Pass Out",
+        third: "Graduation",
+        firstDescription: "Lakshmi Convent School Hisar with 72.8%",
+        secondDescription: "Suman High School Hisar with 81%",
+        thirdDescription: "Pursuing BA in Phychology",
+
+    },
+];
