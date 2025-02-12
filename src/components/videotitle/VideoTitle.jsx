@@ -50,16 +50,16 @@ const VideoTitle = () => {
             <div className='pt-2.5'>
                 {VIDEO_TITLE_DATA_LIST.map((obj, i) => {
                     return (
-                        <div key={i} className={`border px-4 py-6 border-[#595959] ${params === obj.tabName ? "block" : "hidden"}`}>
-                            <p className={`text-base md:text-md text-red-600`}>
+                        <div key={i} className={`border px-4 md:px-10 lg:px-20 py-6 border-[#595959] ${params === obj.tabName ? "block" : "hidden"}`}>
+                            <p className={`text-sm md:text-base text-black font-bold pb-4`}>
                                 {obj.first}
                             </p>
                             <Image className='w-full' src={obj.firstImage} width={300} height={200} alt='resume' />
-                            <p className={`text-base md:text-md text-red-600 pt-2`}>
+                            <p className={`text-sm md:text-base text-black font-bold py-4`}>
                                 {obj.second}
                             </p>
                             <Image className='w-full' src={obj.secondImage} width={300} height={200} alt='resume' />
-                            <Image className='w-full' src={obj.thirdImage} width={300} height={200} alt='resume' />
+                            <Image className='w-full max-w-[204px] sm:max-w-[304px] md:max-w-[404px] mx-auto pt-16' src={obj.thirdImage} width={300} height={200} alt='resume' />
 
                         </div>
                     );
