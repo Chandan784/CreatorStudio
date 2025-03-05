@@ -1,6 +1,8 @@
+"use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import "../app/globals.css";
+
+import { useRouter } from "next/navigation";
 
 const studios = [
   {
@@ -51,6 +53,7 @@ const studios = [
 ];
 
 export default function StudioList() {
+  let route = useRouter();
   const [filters, setFilters] = useState({
     location: "",
     price: "",
@@ -182,6 +185,7 @@ export default function StudioList() {
               className="bg-purple-600 text-white px-4 py-2 w-full mt-4 rounded-lg shadow hover:bg-purple-700"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => route.push("/studio/6544")}
             >
               View Details
             </motion.button>

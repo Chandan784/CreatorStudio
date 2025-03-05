@@ -1,7 +1,7 @@
 import React from "react";
 
-function studio() {
+function page() {
   return <div></div>;
 }
 
-export default studio;
+export default page;

@@ -1,23 +1,39 @@
-import Footer from "@/components/common/Footer";
-import RequestCall from "@/components/homepage/RequestCall";
-import Header from "@/components/common/Header";
-import Details from "@/components/homepage/Details";
-import StepsToPartner from "@/components/homepage/StepsToPartner";
-import WhyJoin from "@/components/homepage/WhyJoin";
-import PeopleCheck from "@/components/homepage/PeopleCheck";
-import HerePartners from "@/components/homepage/HeroPartners";
+"use client";
 
-export default function Home() {
+import { usePathname } from "next/navigation"; // Next.js router hook
+import Sidebar from "@/components/layout/Sidebar";
+import Dashboard from "./dashboard/page";
+import Authentication from "./auth/page";
+import StudioList from "./studioList/page";
+import StudioOnboardingForm from "./studio-owner/studioOnboard/page";
+import HomePage from "./home/page";
+
+// Example of another page
+
+export default function AppPage() {
+  const pathName = usePathname();
+
+  // Function to determine which component to render
+  const renderComponent = () => {
+    if (pathName.startsWith("/")) {
+      return <HomePage />;
+    } else if (pathName.startsWith("/dashboard")) {
+      return <Dashboard />;
+    } else if (pathName.startsWith("/auth")) {
+      return <Authentication />;
+    } else if (pathName.startsWith("/studioOnboard")) {
+      return <StudioOnboardingForm />;
+    } else if (pathName.startsWith("/studioList")) {
+      return <StudioList />;
+    }
+  };
+
   return (
-    <>
-      <Header />
-      <Details />
-      <WhyJoin />
-      <StepsToPartner />
-      <PeopleCheck />
-      <HerePartners />
-      <RequestCall />
-      <Footer />
-    </>
+    <div className="w-full flex">
+      {/* Sidebar Component */}
+
+      {/* Render the main content dynamically based on the path */}
+      <div className="w-full  p-4">{renderComponent()}</div>
+    </div>
   );
 }
