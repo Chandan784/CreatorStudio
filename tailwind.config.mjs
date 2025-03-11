@@ -7,6 +7,7 @@ export default {
   ],
   theme: {
     extend: {
+<<<<<<< HEAD
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -20,6 +21,11 @@ export default {
           "50%": { opacity: 0.4 },
         },
       },
+=======
+      backgroundImage: {
+        check: "url('/assets/images/home/webp/people-check-in.webp')"
+      }
+>>>>>>> a288be371c1cd60fe305e0f6ba79582dc95e9692
     },
   },
   plugins: [],
