@@ -1,45 +1,25 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Phone, LayoutDashboard } from "lucide-react"; // Replace Settings with LayoutDashboard
+import { useState } from "react";
+import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "@/store/slice/authSlice"; // Import Redux action
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Simulate login state
-  const [user, setUser] = useState(null); // State to store user data
-  const [userRole, setUserRole] = useState(""); // State to store user role
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  // Fetch user data when the component mounts
-  useEffect(() => {
-    const fetchUser = async () => {
-      // Simulate fetching user data (replace with your actual logic)
-      const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData) {
-        setUser(userData);
-        setUserRole(userData.role); // Extract role from user object
-        setIsLoggedIn(true); // Set login state to true
-      }
-    };
+  // Get authentication state and user details from Redux
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  console.log(user);
 
-    fetchUser();
-  }, []);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  // Handle dashboard button click
-  const handleDashboardClick = () => {
-    switch (userRole) {
-      case "studioOwner":
-        router.push("/studio-owner/dashboard");
-        break;
-      case "user":
-        router.push("/dashboard");
-        break;
-      case "admin":
-        router.push("/admin/dashboard");
-        break;
-      default:
-        router.push("/"); // Fallback to home page
-        break;
-    }
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout()); // Clear Redux state and remove token
+    setIsProfileModalOpen(false); // Close modal
+    router.push("/"); // Redirect to home
   };
 
   return (
@@ -55,15 +35,6 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          {/* Onboard Button (Blinking Animation) */}
-          <a
-            href="/studioOnboard"
-            className="px-6 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition shadow-md animate-blink"
-          >
-            🚀 Onboard Your Studio for Free
-          </a>
-
-          {/* Call Now Button (No Background) */}
           <a
             href="tel:+6370302039"
             className="flex items-center text-gray-700 font-medium hover:text-indigo-600 transition"
@@ -71,7 +42,7 @@ export default function Navbar() {
             📞 Call Now: +91 63703 02039
           </a>
 
-          {/* Login Button or Dashboard Icon */}
+          {/* Login Button or Profile Icon */}
           {!isLoggedIn ? (
             <a
               href="/auth"
@@ -80,16 +51,15 @@ export default function Navbar() {
               Login
             </a>
           ) : (
-            <LayoutDashboard
+            <User
               className="w-6 h-6 text-indigo-600 cursor-pointer hover:text-indigo-700"
-              onClick={handleDashboardClick}
+              onClick={() => setIsProfileModalOpen(true)}
             />
           )}
         </div>
 
-        {/* Mobile Menu (Always Visible) */}
+        {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-4">
-          {/* Call Now Button */}
           <a
             href="tel:+6370302039"
             className="flex items-center text-gray-700 font-medium hover:text-indigo-600 transition"
@@ -97,7 +67,7 @@ export default function Navbar() {
             📞 Call Now
           </a>
 
-          {/* Login Button or Dashboard Icon */}
+          {/* Login Button or Profile Icon */}
           {!isLoggedIn ? (
             <a
               href="/auth"
@@ -106,13 +76,56 @@ export default function Navbar() {
               Login
             </a>
           ) : (
-            <LayoutDashboard
+            <User
               className="w-6 h-6 text-indigo-600 cursor-pointer hover:text-indigo-700"
-              onClick={handleDashboardClick}
+              onClick={() => setIsProfileModalOpen(true)}
             />
           )}
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {isProfileModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl font-bold text-indigo-600 mb-4">Profile</h2>
+
+            {/* Display User Details */}
+            {user && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Email
+                  </label>
+                  <p className="mt-1 text-gray-900">{user.email}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Role
+                  </label>
+                  <p className="mt-1 text-gray-900">{user.role}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Buttons */}
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                onClick={() => setIsProfileModalOpen(false)}
+              >
+                Close
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

@@ -1,8 +1,7 @@
-"use client";
 import React from "react";
 
-function page() {
+function AgencyHome() {
   return <div></div>;
 }
 
-export default page;
+export default AgencyHome;

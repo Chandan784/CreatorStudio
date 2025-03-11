@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Search, MapPin, Star, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import studios from "../data";
+import studios from "../../data";
 
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -7,6 +7,8 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import { useRouter } from "next/navigation"; // Import useRouter for routing
 import { useEffect } from "react";
+import { Provider } from "react-redux";
+import store from "@/store/store";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,35 +23,30 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   const router = useRouter();
 
-  // Example of using useEffect to handle route changes
   useEffect(() => {
-    // Example of a route change if needed
     console.log("Page loaded, current route:", router.asPath);
   }, [router.asPath]);
 
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="flex min-h-screen flex-col">
-          {/* Navbar */}
-          <Navbar />
+    <Provider store={store}>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div className="flex min-h-screen flex-col">
+            {/* Navbar */}
+            <Navbar />
 
-          <div className="flex  flex-1">
             {/* Sidebar */}
 
             {/* Main Content */}
-            <main className="flex-1 ">
-              {/* Render children dynamically based on routing */}
-              {children}
-            </main>
-          </div>
+            <main className="flex-1">{children}</main>
 
-          {/* Footer */}
-          <Footer />
-        </div>
-      </body>
-    </html>
+            {/* Footer */}
+            <Footer />
+          </div>
+        </body>
+      </html>
+    </Provider>
   );
 }

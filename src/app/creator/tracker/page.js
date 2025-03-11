@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-const Tracker = () => {
+const CreatorTrackerPage = () => {
   let route = useRouter();
   const dummyData = {
     projects: [
@@ -93,4 +93,4 @@ const Tracker = () => {
   );
 };
 
-export default Tracker;
+export default CreatorTrackerPage;

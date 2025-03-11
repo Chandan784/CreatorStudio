@@ -9,47 +9,34 @@ import {
   CreditCard,
   BarChart2,
   Menu,
+  UserCog,
   ChevronLeft,
 } from "lucide-react";
 import { useState } from "react";
-import Overview from "./overview/page";
-import Appointments from "@/app/dashboard/appointments/page";
-import Transactions from "@/app/dashboard/transactions/page";
-import Recharge from "@/app/dashboard/recharge/page";
-import SettingsPage from "@/app/dashboard/settings/page";
-import Tracker from "@/app/dashboard/tracker/page";
-import ProjectDetails from "./project-details/[projectId]/page";
+import AdminDashboard from "./dashboard/page";
+import AdminClientpage from "./clients/page";
+import AdminLeadsPage from "./leads/page";
 
 const sidebarOptions = [
   {
-    icon: <Home className="w-6 h-6" />,
-    title: "Overview",
-    path: "/dashboard/overview",
+    icon: <Home className="w-6 h-6" />, // Changed to Home icon for Dashboard
+    title: "Dashboard",
+    path: "/admin/dashboard",
   },
   {
     icon: <BarChart2 className="w-6 h-6" />,
-    title: "Tracker",
-    path: "/dashboard/tracker",
+    title: "Leads",
+    path: "/admin/leads",
   },
   {
-    icon: <Calendar className="w-6 h-6" />,
-    title: "Appointments",
-    path: "/dashboard/appointments",
-  },
-  {
-    icon: <Film className="w-6 h-6" />,
-    title: "Transactions",
-    path: "/dashboard/transactions",
-  },
-  {
-    icon: <CreditCard className="w-6 h-6" />,
-    title: "Recharge",
-    path: "/dashboard/recharge",
+    icon: <UserCog className="w-6 h-6" />,
+    title: "Clients",
+    path: "/admin/clients",
   },
   {
     icon: <Settings className="w-6 h-6" />,
     title: "Settings",
-    path: "/dashboard/settings",
+    path: "/admin/settings",
   },
 ];
 
@@ -60,28 +47,23 @@ export default function DashboardLayout() {
 
   // Function to determine the active page component
   const getActivePage = () => {
+    console.log("Current Pathname:", pathname); // Debugging line
     switch (pathname) {
-      case "/dashboard/overview":
-        return <Overview />;
-      case "/dashboard/tracker":
-        return <Tracker />;
-      case "/dashboard/appointments":
-        return <Appointments />;
-      case "/dashboard/transactions":
-        return <Transactions />;
-      case "/dashboard/recharge":
-        return <Recharge />;
-      case "/dashboard/settings":
-        return <SettingsPage />;
-      case `/dashboard/project-details/6464`:
-        return <ProjectDetails />;
+      case "/admin/dashboard":
+        return <AdminDashboard />;
+      case "/admin/leads": // Corrected typo here
+        return <AdminLeadsPage />;
+      case "/admin/clients":
+        return <AdminClientpage />;
+      case "/admin/settings":
+        return <AdminLeadsPage />; // Assuming this is intentional
       default:
-        return <Overview />;
+        return <AdminDashboard />;
     }
   };
 
   return (
-    <div className=" mt-20 flex min-h-screen bg-gray-100">
+    <div className="mt-20 flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <div
         className={`bg-white shadow-lg transition-all duration-300 p-6 ${
@@ -123,7 +105,7 @@ export default function DashboardLayout() {
       </div>
 
       {/* Main Content - Expands when Sidebar is Collapsed */}
-      <div className={`p-6   transition-all duration-300 flex-1`}>
+      <div className={`p-6 transition-all duration-300 flex-1`}>
         {getActivePage()}
       </div>
 

@@ -24,237 +24,129 @@ ChartJS.register(
 );
 
 export default function AdminDashboard() {
-  // Dummy data for users
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", role: "user" },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "studio_owner",
-    },
-    { id: 3, name: "Admin User", email: "admin@example.com", role: "admin" },
-    { id: 4, name: "Alice Johnson", email: "alice@example.com", role: "user" },
-    {
-      id: 5,
-      name: "Bob Brown",
-      email: "bob@example.com",
-      role: "studio_owner",
-    },
-  ]);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRole, setSelectedRole] = useState("all");
-  const [activeSection, setActiveSection] = useState("users");
-
-  // Update user role
-  const handleUpdateRole = (userId, newRole) => {
-    const updatedUsers = users.map((user) =>
-      user.id === userId ? { ...user, role: newRole } : user
-    );
-    setUsers(updatedUsers);
-    alert(`User role updated to ${newRole}`);
-  };
-
-  // Delete user
-  const handleDeleteUser = (userId) => {
-    const updatedUsers = users.filter((user) => user.id !== userId);
-    setUsers(updatedUsers);
-    alert("User deleted successfully");
-  };
-
-  // Filter users based on search query and role
-  const filteredUsers = users.filter(
-    (user) =>
-      (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (selectedRole === "all" || user.role === selectedRole)
-  );
-
-  // Data for the bar chart (user roles distribution)
-  const rolesData = {
+  // Dummy data for charts
+  const usersData = {
     labels: ["Users", "Studio Owners", "Admins"],
     datasets: [
       {
         label: "Number of Users",
-        data: [
-          users.filter((user) => user.role === "user").length,
-          users.filter((user) => user.role === "studio_owner").length,
-          users.filter((user) => user.role === "admin").length,
-        ],
+        data: [120, 50, 10], // Example data
         backgroundColor: ["#3b82f6", "#f59e0b", "#10b981"],
       },
     ],
   };
 
-  // Data for the pie chart (user roles distribution)
-  const pieData = {
-    labels: ["Users", "Studio Owners", "Admins"],
+  const revenueData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        data: [
-          users.filter((user) => user.role === "user").length,
-          users.filter((user) => user.role === "studio_owner").length,
-          users.filter((user) => user.role === "admin").length,
-        ],
-        backgroundColor: ["#3b82f6", "#f59e0b", "#10b981"],
+        label: "Revenue (in $)",
+        data: [5000, 7000, 3000, 9000, 6000, 4000], // Example data
+        backgroundColor: "#3b82f6",
+      },
+    ],
+  };
+
+  const pieData = {
+    labels: ["Active Users", "Inactive Users"],
+    datasets: [
+      {
+        data: [85, 15], // Example data
+        backgroundColor: ["#3b82f6", "#f59e0b"],
       },
     ],
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-16">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg p-4">
-        <h2 className="text-xl font-bold mb-6 text-blue-600">Admin Panel</h2>
-        <ul>
-          <li
-            className={`p-2 cursor-pointer ${
-              activeSection === "users"
-                ? "bg-blue-100 text-blue-600"
-                : "hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveSection("users")}
-          >
-            Users
-          </li>
-          <li
-            className={`p-2 cursor-pointer ${
-              activeSection === "reports"
-                ? "bg-blue-100 text-blue-600"
-                : "hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveSection("reports")}
-          >
-            Reports
-          </li>
-          <li
-            className={`p-2 cursor-pointer ${
-              activeSection === "settings"
-                ? "bg-blue-100 text-blue-600"
-                : "hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveSection("settings")}
-          >
-            Settings
-          </li>
-        </ul>
+    <div className="flex-1 p-8">
+      {/* Page Title */}
+      <h1 className="text-3xl font-bold mb-8 text-blue-600">Dashboard</h1>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-700">Total Users</h2>
+          <p className="text-3xl font-bold text-blue-600">1,200</p>
+          <p className="text-sm text-gray-500">+5.2% from last month</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-700">Total Revenue</h2>
+          <p className="text-3xl font-bold text-green-600">$45,000</p>
+          <p className="text-sm text-gray-500">+12.4% from last month</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-700">
+            Active Projects
+          </h2>
+          <p className="text-3xl font-bold text-purple-600">48</p>
+          <p className="text-sm text-gray-500">+8.7% from last month</p>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-8">
-        {activeSection === "users" && (
-          <>
-            <h1 className="text-3xl font-bold mb-6 text-blue-600">
-              User Management
-            </h1>
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Bar Chart - Revenue */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Monthly Revenue</h2>
+          <Bar
+            data={revenueData}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </div>
 
-            {/* Search and Filter */}
-            <div className="mb-6 flex gap-4">
-              <input
-                type="text"
-                placeholder="Search users by name or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <select
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
-                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All Roles</option>
-                <option value="user">User</option>
-                <option value="studio_owner">Studio Owner</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
+        {/* Pie Chart - User Distribution */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">User Distribution</h2>
+          <Pie
+            data={pieData}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
 
-            {/* Users Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="p-3 text-left">Name</th>
-                    <th className="p-3 text-left">Email</th>
-                    <th className="p-3 text-left">Role</th>
-                    <th className="p-3 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="border-b border-gray-200 hover:bg-gray-50"
-                    >
-                      <td className="p-3">{user.name}</td>
-                      <td className="p-3">{user.email}</td>
-                      <td className="p-3">
-                        <select
-                          value={user.role}
-                          onChange={(e) =>
-                            handleUpdateRole(user.id, e.target.value)
-                          }
-                          className="p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="user">User</option>
-                          <option value="studio_owner">Studio Owner</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </td>
-                      <td className="p-3">
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* No Users Found Message */}
-            {filteredUsers.length === 0 && (
-              <div className="mt-6 text-center text-gray-500">
-                No users found matching your search.
-              </div>
-            )}
-          </>
-        )}
-
-        {activeSection === "reports" && (
-          <>
-            <h1 className="text-3xl font-bold mb-6 text-blue-600">Reports</h1>
-
-            {/* Bar Chart */}
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">
-                User Roles Distribution
-              </h2>
-              <Bar data={rolesData} />
-            </div>
-
-            {/* Pie Chart */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                User Roles Pie Chart
-              </h2>
-              <Pie data={pieData} />
-            </div>
-          </>
-        )}
-
-        {activeSection === "settings" && (
-          <>
-            <h1 className="text-3xl font-bold mb-6 text-blue-600">Settings</h1>
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600">Settings content goes here.</p>
-            </div>
-          </>
-        )}
+      {/* Recent Activity Table */}
+      <div className="bg-white rounded-lg shadow p-6 mt-8">
+        <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+        <table className="w-full">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="p-3 text-left">User</th>
+              <th className="p-3 text-left">Action</th>
+              <th className="p-3 text-left">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3">John Doe</td>
+              <td className="p-3">Updated profile</td>
+              <td className="p-3">2023-10-01</td>
+            </tr>
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3">Jane Smith</td>
+              <td className="p-3">Created a new project</td>
+              <td className="p-3">2023-10-02</td>
+            </tr>
+            <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="p-3">Admin User</td>
+              <td className="p-3">Deleted a user</td>
+              <td className="p-3">2023-10-03</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );

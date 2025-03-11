@@ -72,7 +72,7 @@ const settingsData = [
   },
 ];
 
-export default function SettingsPage() {
+export default function StudioSettingsPage() {
   const router = useRouter();
 
   // Handle card click
