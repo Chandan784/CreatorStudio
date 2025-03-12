@@ -12,7 +12,6 @@ import LoginForm from "@/components/layout/LoginForm";
 import SignupForm from "@/components/layout/SignupForm";
 import ForgotPasswordForm from "@/components/layout/ForgotPasswordForm";
 import VerificationMessage from "@/components/layout/VerificationMessage";
-
 import ResetPasswordForm from "@/components/layout/ResetPasswordForm";
 
 export default function Authentication() {
@@ -21,6 +20,7 @@ export default function Authentication() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [userType, setUserType] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // New state for phone number
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ export default function Authentication() {
     setMessage("");
     setLoading(true);
 
-    if (!password || (!isLogin && (!fullName || !userType))) {
+    if (!password || (!isLogin && (!fullName || !userType || !phoneNumber))) {
       setError("All fields are required.");
       setLoading(false);
       return;
@@ -54,10 +54,7 @@ export default function Authentication() {
 
         dispatch(login(data.token));
 
-        console.log(data, "data");
-
         const userRole = decodeToken(data.token).role;
-        console.log(userRole, "userRole");
 
         if (userRole === "studioOwner") {
           router.push("/studio-owner/dashboard");
@@ -73,7 +70,13 @@ export default function Authentication() {
       } else {
         const { data } = await axios.post(
           "http://localhost:8000/api/v1/auth/register",
-          { name: fullName, email, password, userType }
+          {
+            name: fullName,
+            email,
+            password,
+            role: userType,
+            phoneNumber,
+          } // Include phoneNumber in the request
         );
 
         setShowVerificationMessage(true);
@@ -187,6 +190,8 @@ export default function Authentication() {
                 setFullName={setFullName}
                 userType={userType}
                 setUserType={setUserType}
+                phoneNumber={phoneNumber} // Pass phone number state
+                setPhoneNumber={setPhoneNumber} // Pass phone number setter
                 loading={loading}
                 handleAuth={handleAuth}
                 setIsLogin={setIsLogin}

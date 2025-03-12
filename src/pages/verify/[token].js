@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { CheckCircleIcon, XCircleIcon, Loader2Icon } from "lucide-react";
 import "../../app/globals.css";
+import { signup } from "@/store/slice/authSlice";
 
 export default function Verify() {
   const router = useRouter();
@@ -31,10 +32,16 @@ export default function Verify() {
       );
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+      if (!res.ok) throw new Error(data.message || "Verification failed.");
 
       setStatus("success");
       setMessage("Your email has been successfully verified!");
+      localStorage.setItem("token", token);
+
+      // Redirect to the creator details page after 2 seconds
+      setTimeout(() => {
+        router.push("/creator/details");
+      }, 2000);
     } catch (error) {
       setStatus("error");
       setMessage(error.message || "Something went wrong.");
@@ -52,8 +59,9 @@ export default function Verify() {
         {status === "loading" ? (
           <motion.div
             className="flex flex-col items-center"
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
             <Loader2Icon size={50} className="text-blue-500 animate-spin" />
             <p className="mt-4 text-gray-600">{message}</p>
@@ -70,12 +78,6 @@ export default function Verify() {
               Email Verified!
             </h2>
             <p className="mt-2 text-gray-600">{message}</p>
-            <button
-              onClick={() => router.push("/auth")}
-              className="mt-6 px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition"
-            >
-              Go to Login
-            </button>
           </motion.div>
         ) : (
           <motion.div

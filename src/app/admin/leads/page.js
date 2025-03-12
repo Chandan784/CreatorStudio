@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   User,
   FileText,
@@ -12,280 +13,531 @@ import {
   X,
   Phone,
   Paperclip,
+  Search,
+  Filter,
 } from "lucide-react";
 
-// Dummy data for leads
-const leadsData = [
-  {
-    id: 1,
-    name: "John Doe",
-    interestLevel: "High", // Determines card color
-    remark: "Interested in product demo",
-    date: "2023-10-15",
-    requirement: "Need a custom solution for their business",
-    proposalStatus: "Sent",
-    callbackStatus: "Pending",
-    callbackRequired: true,
-    pointOfContact: "Jane Smith",
-  },
-  {
-    id: 2,
-    name: "Alice Johnson",
-    interestLevel: "Medium", // Determines card color
-    remark: "Requested pricing details",
-    date: "2023-10-14",
-    requirement: "Looking for a subscription plan",
-    proposalStatus: "Draft",
-    callbackStatus: "Completed",
-    callbackRequired: false,
-    pointOfContact: "Michael Brown",
-  },
-  // Add more leads as needed
-];
-
 export default function LeadsPage() {
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState(null); // Tracks which modal is open
+  const [leadsData, setLeadsData] = useState([]);
+  const [filteredLeads, setFilteredLeads] = useState([]);
+  const [editingLeadId, setEditingLeadId] = useState(null); // Track which lead is being edited
+  const [editedLead, setEditedLead] = useState({}); // Store edited lead data
+  const [viewingLeadId, setViewingLeadId] = useState(null); // Track which lead's details are being viewed
 
-  // Function to open the modal with options
-  const handleCardClick = (lead) => {
-    setSelectedLead(lead);
-    setIsModalOpen(true);
+  // Filter states
+  const [nameFilter, setNameFilter] = useState("");
+  const [interestLevelFilter, setInterestLevelFilter] = useState("");
+  const [proposalStatusFilter, setProposalStatusFilter] = useState("");
+  const [callStatusFilter, setCallStatusFilter] = useState("");
+  const [callbackRequiredFilter, setCallbackRequiredFilter] = useState("");
+
+  // Fetch leads data on component mount
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:8000/api/v1/leads");
+        setLeadsData(data);
+        setFilteredLeads(data); // Initialize filtered leads with all data
+      } catch (error) {
+        console.error("Error fetching leads:", error);
+      }
+    };
+
+    fetchLeads();
+  }, []);
+
+  // Function to handle editing a lead
+  const handleEditClick = (lead) => {
+    setEditingLeadId(lead._id);
+    setEditedLead({ ...lead }); // Initialize editedLead with the current lead data
   };
 
-  // Function to close the modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedLead(null);
-    setActiveModal(null);
+  // Function to handle saving edited lead
+  const handleSaveClick = async (id) => {
+    try {
+      await axios.put(`http://localhost:8000/api/v1/leads/${id}`, editedLead);
+      setLeadsData((prev) =>
+        prev.map((lead) => (lead._id === id ? editedLead : lead))
+      );
+      setFilteredLeads((prev) =>
+        prev.map((lead) => (lead._id === id ? editedLead : lead))
+      );
+      setEditingLeadId(null); // Exit editing mode
+    } catch (error) {
+      console.error("Error updating lead:", error);
+    }
   };
 
-  // Function to determine card color based on interest level
-  const getCardColor = (interestLevel) => {
-    switch (interestLevel) {
-      case "High":
-        return "bg-red-100";
-      case "Medium":
-        return "bg-yellow-100";
-      case "Low":
+  // Function to handle input changes during editing
+  const handleInputChange = (e, field) => {
+    setEditedLead((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+    }));
+  };
+
+  // Function to determine section background color based on dropdown value
+  const getSectionColor = (value) => {
+    switch (value?.toLowerCase()) {
+      case "high":
+        return "bg-red-400";
+      case "medium":
+        return "bg-yellow-400";
+      case "low":
+        return "bg-green-400";
+      case "pending":
+        return "bg-blue-100";
+      case "sent":
+        return "bg-purple-100";
+      case "approved":
         return "bg-green-100";
+      case "not contacted":
+        return "bg-gray-100";
+      case "contacted":
+        return "bg-blue-100";
+      case "follow up required":
+        return "bg-yellow-100";
       default:
         return "bg-gray-100";
     }
   };
 
+  // Function to apply filters
+  const applyFilters = () => {
+    let filtered = leadsData;
+
+    if (nameFilter) {
+      filtered = filtered.filter((lead) =>
+        lead.userId?.name.toLowerCase().includes(nameFilter.toLowerCase())
+      );
+    }
+
+    if (interestLevelFilter) {
+      filtered = filtered.filter(
+        (lead) =>
+          lead.interestLevel.toLowerCase() === interestLevelFilter.toLowerCase()
+      );
+    }
+
+    if (proposalStatusFilter) {
+      filtered = filtered.filter(
+        (lead) =>
+          lead.proposalStatus.toLowerCase() ===
+          proposalStatusFilter.toLowerCase()
+      );
+    }
+
+    if (callStatusFilter) {
+      filtered = filtered.filter(
+        (lead) =>
+          lead.callStatus.toLowerCase() === callStatusFilter.toLowerCase()
+      );
+    }
+
+    if (callbackRequiredFilter !== "") {
+      filtered = filtered.filter(
+        (lead) => lead.callbackRequired === (callbackRequiredFilter === "true")
+      );
+    }
+
+    setFilteredLeads(filtered);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    setNameFilter("");
+    setInterestLevelFilter("");
+    setProposalStatusFilter("");
+    setCallStatusFilter("");
+    setCallbackRequiredFilter("");
+    setFilteredLeads(leadsData);
+  };
+
+  // Function to handle viewing user details
+  const handleViewRequirement = (leadId) => {
+    setViewingLeadId(leadId);
+  };
+
+  // Function to close the user details section
+  const handleCloseUserDetails = () => {
+    setViewingLeadId(null);
+  };
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 p-6">
       {/* Leads List */}
-      <div className="w-full p-6 overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-6">Leads</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {leadsData.map((lead) => (
-            <div
-              key={lead.id}
-              className={`p-4 rounded-lg shadow-md cursor-pointer ${getCardColor(
-                lead.interestLevel
-              )}`}
-              onClick={() => handleCardClick(lead)}
+      <div className="w-full overflow-y-auto">
+        <h1 className="text-2xl font-bold mb-6 text-center">Leads</h1>
+
+        {/* Status-Wise Color Legend */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-center">
+            Status Color Legend
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Interest Level Colors */}
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-red-100 rounded-full"></div>
+              <span>High Interest</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-yellow-100 rounded-full"></div>
+              <span>Medium Interest</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-green-100 rounded-full"></div>
+              <span>Low Interest</span>
+            </div>
+
+            {/* Proposal Status Colors */}
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-blue-100 rounded-full"></div>
+              <span>Pending Proposal</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-purple-100 rounded-full"></div>
+              <span>Sent Proposal</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-green-100 rounded-full"></div>
+              <span>Approved Proposal</span>
+            </div>
+
+            {/* Call Status Colors */}
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-gray-100 rounded-full"></div>
+              <span>Not Contacted</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-blue-100 rounded-full"></div>
+              <span>Contacted</span>
+            </div>
+            <div className="flex items-center space-x-2 justify-center">
+              <div className="w-4 h-4 bg-yellow-100 rounded-full"></div>
+              <span>Follow Up Required</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Section */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Name Filter */}
+            <div>
+              <label className="text-sm text-gray-500">Name</label>
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+            </div>
+
+            {/* Interest Level Filter */}
+            <div>
+              <label className="text-sm text-gray-500">Interest Level</label>
+              <select
+                value={interestLevelFilter}
+                onChange={(e) => setInterestLevelFilter(e.target.value)}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">All</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            {/* Proposal Status Filter */}
+            <div>
+              <label className="text-sm text-gray-500">Proposal Status</label>
+              <select
+                value={proposalStatusFilter}
+                onChange={(e) => setProposalStatusFilter(e.target.value)}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="sent">Sent</option>
+                <option value="approved">Approved</option>
+              </select>
+            </div>
+
+            {/* Call Status Filter */}
+            <div>
+              <label className="text-sm text-gray-500">Call Status</label>
+              <select
+                value={callStatusFilter}
+                onChange={(e) => setCallStatusFilter(e.target.value)}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">All</option>
+                <option value="not contacted">Not Contacted</option>
+                <option value="contacted">Contacted</option>
+                <option value="follow up required">Follow Up Required</option>
+              </select>
+            </div>
+
+            {/* Callback Required Filter */}
+            <div>
+              <label className="text-sm text-gray-500">Callback Required</label>
+              <select
+                value={callbackRequiredFilter}
+                onChange={(e) => setCallbackRequiredFilter(e.target.value)}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex justify-end space-x-4 mt-4">
+            <button
+              onClick={applyFilters}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center"
             >
-              <h2 className="text-xl font-semibold">{lead.name}</h2>
-              <p className="text-sm text-gray-600">
-                <Flag className="inline w-4 h-4 mr-1" />
-                Interest: {lead.interestLevel}
-              </p>
-              <p className="text-sm text-gray-600">
-                <User className="inline w-4 h-4 mr-1" />
-                Remark: {lead.remark}
-              </p>
-              <p className="text-sm text-gray-600">
-                <Calendar className="inline w-4 h-4 mr-1" />
-                Date: {lead.date}
-              </p>
+              <Filter className="w-4 h-4 mr-2" />
+              Apply Filters
+            </button>
+            <button
+              onClick={resetFilters}
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        {/* Leads Cards */}
+        <div className="space-y-4">
+          {filteredLeads.map((lead) => (
+            <div
+              key={lead._id}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            >
+              {/* Card Content */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                {/* Name */}
+                <div>
+                  <label className="text-sm text-gray-500">Name</label>
+                  <p className="font-semibold">{lead.userId?.name}</p>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="text-sm text-gray-500">Email</label>
+                  <p className="font-semibold">{lead.userId?.email}</p>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="text-sm text-gray-500">Phone</label>
+                  <p className="font-semibold">{lead.userId?.phone || "N/A"}</p>
+                </div>
+
+                {/* Point of Contact */}
+                <div>
+                  <label className="text-sm text-gray-500">
+                    Point of Contact
+                  </label>
+                  {editingLeadId === lead._id ? (
+                    <input
+                      type="text"
+                      value={editedLead.pointOfContact || ""}
+                      onChange={(e) => handleInputChange(e, "pointOfContact")}
+                      className="w-full p-1 border rounded"
+                    />
+                  ) : (
+                    <p className="font-semibold">{lead.pointOfContact}</p>
+                  )}
+                </div>
+
+                {/* Interest Level */}
+                <div className={getSectionColor(lead.interestLevel)}>
+                  <label className="text-sm text-gray-500">
+                    Interest Level
+                  </label>
+                  {editingLeadId === lead._id ? (
+                    <select
+                      value={editedLead.interestLevel || ""}
+                      onChange={(e) => handleInputChange(e, "interestLevel")}
+                      className="w-full p-1 border rounded"
+                    >
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  ) : (
+                    <p className="font-semibold">{lead.interestLevel}</p>
+                  )}
+                </div>
+
+                {/* Proposal Status */}
+                <div className={getSectionColor(lead.proposalStatus)}>
+                  <label className="text-sm text-gray-500">
+                    Proposal Status
+                  </label>
+                  {editingLeadId === lead._id ? (
+                    <select
+                      value={editedLead.proposalStatus || ""}
+                      onChange={(e) => handleInputChange(e, "proposalStatus")}
+                      className="w-full p-1 border rounded"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="sent">Sent</option>
+                      <option value="approved">Approved</option>
+                    </select>
+                  ) : (
+                    <p className="font-semibold">{lead.proposalStatus}</p>
+                  )}
+                </div>
+
+                {/* Call Status */}
+                <div className={getSectionColor(lead.callStatus)}>
+                  <label className="text-sm text-gray-500">Call Status</label>
+                  {editingLeadId === lead._id ? (
+                    <select
+                      value={editedLead.callStatus || ""}
+                      onChange={(e) => handleInputChange(e, "callStatus")}
+                      className="w-full p-1 border rounded"
+                    >
+                      <option value="not contacted">Not Contacted</option>
+                      <option value="contacted">Contacted</option>
+                      <option value="follow up required">
+                        Follow Up Required
+                      </option>
+                    </select>
+                  ) : (
+                    <p className="font-semibold">{lead.callStatus}</p>
+                  )}
+                </div>
+
+                {/* Callback Required */}
+                <div>
+                  <label className="text-sm text-gray-500">
+                    Callback Required
+                  </label>
+                  {editingLeadId === lead._id ? (
+                    <select
+                      value={editedLead.callbackRequired || ""}
+                      onChange={(e) => handleInputChange(e, "callbackRequired")}
+                      className="w-full p-1 border rounded"
+                    >
+                      <option value={true}>Yes</option>
+                      <option value={false}>No</option>
+                    </select>
+                  ) : (
+                    <p className="font-semibold">
+                      {lead.callbackRequired ? "Yes" : "No"}
+                    </p>
+                  )}
+                </div>
+
+                {/* Date of Follow-Up */}
+                <div>
+                  <label className="text-sm text-gray-500">
+                    Date of Follow-Up
+                  </label>
+                  {editingLeadId === lead._id ? (
+                    <input
+                      type="date"
+                      value={editedLead.dateOfFollowUp?.split("T")[0] || ""}
+                      onChange={(e) => handleInputChange(e, "dateOfFollowUp")}
+                      className="w-full p-1 border rounded"
+                    />
+                  ) : (
+                    <p className="font-semibold">
+                      {new Date(lead.dateOfFollowUp).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+
+                {/* Remarks */}
+                <div>
+                  <label className="text-sm text-gray-500">Remarks</label>
+                  {editingLeadId === lead._id ? (
+                    <input
+                      type="text"
+                      value={editedLead.remarks || ""}
+                      onChange={(e) => handleInputChange(e, "remarks")}
+                      className="w-full p-1 border rounded"
+                    />
+                  ) : (
+                    <p className="font-semibold">{lead.remarks}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="mt-4 flex justify-center space-x-2">
+                {editingLeadId === lead._id ? (
+                  <button
+                    onClick={() => handleSaveClick(lead._id)}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleEditClick(lead)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleViewRequirement(lead._id)}
+                      className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600"
+                    >
+                      View Requirement
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Main Modal */}
-      {isModalOpen && selectedLead && (
+      {/* User Details Section */}
+      {viewingLeadId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3">
-            <h2 className="text-xl font-bold mb-4">{selectedLead.name}</h2>
-            <div className="space-y-4">
-              <button
-                onClick={() => setActiveModal("requirement")}
-                className="w-full bg-purple-100 p-3 rounded-lg flex items-center space-x-2 hover:bg-purple-200"
-              >
-                <FileText className="w-5 h-5" />
-                <span>View Requirement</span>
-              </button>
-              <button
-                onClick={() => setActiveModal("chat")}
-                className="w-full bg-purple-100 p-3 rounded-lg flex items-center space-x-2 hover:bg-purple-200"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>Chat</span>
-              </button>
-              <button
-                onClick={() => setActiveModal("edit")}
-                className="w-full bg-purple-100 p-3 rounded-lg flex items-center space-x-2 hover:bg-purple-200"
-              >
-                <Edit className="w-5 h-5" />
-                <span>Edit Leads</span>
-              </button>
-              <button
-                onClick={handleCloseModal}
-                className="w-full bg-gray-300 p-3 rounded-lg hover:bg-gray-400"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Requirement Modal */}
-      {activeModal === "requirement" && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3">
-            <h2 className="text-xl font-bold mb-4">Requirement Details</h2>
-            <p className="text-gray-700">{selectedLead.requirement}</p>
-            <button
-              onClick={() => setActiveModal(null)}
-              className="mt-4 w-full bg-gray-300 p-3 rounded-lg hover:bg-gray-400"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Chat Modal */}
-      {activeModal === "chat" && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3">
-            <h2 className="text-xl font-bold mb-4">
-              Chat with {selectedLead.name}
-            </h2>
-            <div className="bg-gray-50 p-4 rounded-lg h-64 overflow-y-auto mb-4">
-              <div className="space-y-4">
-                {/* Chat Messages */}
-                <div className="bg-white p-3 rounded-lg shadow-sm">
-                  <p className="text-sm">
-                    Hello, I'm interested in your services.
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Client - 10:15 AM
-                  </p>
+          <div className="bg-white rounded-lg shadow-md p-6 w-11/12 md:w-1/2 lg:w-1/3">
+            <h2 className="text-xl font-bold mb-4 text-center">User Details</h2>
+            {filteredLeads
+              .filter((lead) => lead._id === viewingLeadId)
+              .map((lead) => (
+                <div key={lead._id} className="space-y-4 text-center">
+                  <div>
+                    <label className="text-sm text-gray-500">Name</label>
+                    <p className="font-semibold">{lead.userId?.name}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Email</label>
+                    <p className="font-semibold">{lead.userId?.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Phone</label>
+                    <p className="font-semibold">
+                      {lead.userId?.phone || "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Requirement</label>
+                    <p className="font-semibold">{lead.requirement}</p>
+                  </div>
+                  <button
+                    onClick={handleCloseUserDetails}
+                    className="w-full bg-gray-300 p-3 rounded-lg hover:bg-gray-400"
+                  >
+                    Close
+                  </button>
                 </div>
-                <div className="bg-purple-100 p-3 rounded-lg shadow-sm ml-8">
-                  <p className="text-sm">
-                    Hi! Could you share more details about your requirements?
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">You - 10:16 AM</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                placeholder="Type a message..."
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              />
-              <button className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                <Paperclip className="w-5 h-5" />
-              </button>
-            </div>
-            <button
-              onClick={() => setActiveModal(null)}
-              className="mt-4 w-full bg-gray-300 p-3 rounded-lg hover:bg-gray-400"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {activeModal === "edit" && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3">
-            <h2 className="text-xl font-bold mb-4">Edit Lead</h2>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Interest Level
-                </label>
-                <select
-                  defaultValue={selectedLead.interestLevel}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Proposal Status
-                </label>
-                <select
-                  defaultValue={selectedLead.proposalStatus}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="Draft">Draft</option>
-                  <option value="Sent">Sent</option>
-                  <option value="Approved">Approved</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Callback Status
-                </label>
-                <select
-                  defaultValue={selectedLead.callbackStatus}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Remarks
-                </label>
-                <textarea
-                  defaultValue={selectedLead.remark}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Point of Contact
-                </label>
-                <input
-                  type="text"
-                  defaultValue={selectedLead.pointOfContact}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setActiveModal(null)}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
+              ))}
           </div>
         </div>
       )}

@@ -11,6 +11,8 @@ const SignupForm = ({
   setFullName,
   userType,
   setUserType,
+  phoneNumber, // New state for phone number
+  setPhoneNumber, // New setter for phone number
   loading,
   handleAuth,
   setIsLogin,
@@ -24,6 +26,7 @@ const SignupForm = ({
       <p className="text-center text-gray-500">Join us today!</p>
 
       <form onSubmit={handleAuth} className="mt-6 space-y-4">
+        {/* Full Name */}
         <div>
           <label className="block text-sm font-medium">Full Name</label>
           <input
@@ -36,6 +39,7 @@ const SignupForm = ({
           />
         </div>
 
+        {/* User Type */}
         <div>
           <label className="block text-sm font-medium">User Type</label>
           <select
@@ -45,11 +49,12 @@ const SignupForm = ({
             disabled={loading}
           >
             <option value="">Select your type</option>
-            <option value="influencer">Influencer</option>
-            <option value="business">Business</option>
+            <option value="Influencer">Influencer</option>
+            <option value="Business">Business</option>
           </select>
         </div>
 
+        {/* Email */}
         <div>
           <label className="block text-sm font-medium">Email address</label>
           <input
@@ -62,6 +67,20 @@ const SignupForm = ({
           />
         </div>
 
+        {/* Phone Number */}
+        <div>
+          <label className="block text-sm font-medium">Phone Number</label>
+          <input
+            type="tel"
+            placeholder="Enter your phone number"
+            className="w-full px-4 py-3 mt-1 rounded-lg border focus:ring-2 focus:ring-blue-500"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        {/* Password */}
         <div>
           <label className="block text-sm font-medium">Password</label>
           <input
@@ -74,6 +93,7 @@ const SignupForm = ({
           />
         </div>
 
+        {/* Signup Button */}
         <motion.button
           whileHover={{ scale: !loading ? 1.05 : 1 }}
           whileTap={{ scale: !loading ? 0.95 : 1 }}
@@ -89,6 +109,7 @@ const SignupForm = ({
         </motion.button>
       </form>
 
+      {/* Login Link */}
       <p className="text-center text-gray-500 mt-4">
         Already have an account?{" "}
         <button
