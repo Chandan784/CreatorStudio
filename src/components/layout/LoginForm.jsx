@@ -12,6 +12,7 @@ const LoginForm = ({
   setIsLogin,
   setShowForgotPassword,
   setMessage,
+  message,
 }) => {
   return (
     <>
@@ -19,6 +20,8 @@ const LoginForm = ({
         Sign in to <span className="text-blue-600 font-bold">Amilo AI</span>
       </h2>
       <p className="text-center text-gray-500">Welcome back! Please log in.</p>
+
+      <h2 className="text-red-600 font-semibold text-center">{message}</h2>
 
       <form onSubmit={handleAuth} className="mt-6 space-y-4">
         <div>

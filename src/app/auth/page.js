@@ -51,7 +51,8 @@ export default function Authentication() {
           "http://localhost:8000/api/v1/auth/login",
           { email, password }
         );
-
+        console.log(data, "Result");
+        setMessage(data.message)
         dispatch(login(data.token));
 
         const userRole = decodeToken(data.token).role;
@@ -179,6 +180,7 @@ export default function Authentication() {
                 setIsLogin={setIsLogin}
                 setShowForgotPassword={setShowForgotPassword}
                 setMessage={setMessage}
+                message = {message}
               />
             ) : (
               <SignupForm
