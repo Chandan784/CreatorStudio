@@ -198,6 +198,7 @@ export default function Authentication() {
                 handleAuth={handleAuth}
                 setIsLogin={setIsLogin}
                 setMessage={setMessage}
+                message= {message}
               />
             )
           ) : (
