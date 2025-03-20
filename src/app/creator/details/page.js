@@ -7,7 +7,6 @@ import InfluencerRequirementForm from "@/components/layout/InfluencerDetailsForm
 
 function CreatorDetailsPgae() {
   let [user, setUser] = useState({});
-  console.log(user, "userData");
 
   useEffect(() => {
     let userData = getUser();
@@ -15,7 +14,8 @@ function CreatorDetailsPgae() {
   }, []);
 
   if (user.role == "Business") return <BusinessRequirementForm />;
-  if (user.role == "Influencer") return <InfluencerRequirementForm />;
+  if (user.role == "Influencer")
+    return <InfluencerRequirementForm userId={"67d173ffd0f78d32ad046925"} />;
 }
 
 export default CreatorDetailsPgae;

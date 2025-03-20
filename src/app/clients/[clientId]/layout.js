@@ -2,74 +2,59 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import {
-  Home,
-  Calendar,
-  Settings,
-  Film,
-  CreditCard,
-  BarChart2,
-  Menu,
   UserCog,
+  Clock,
+  FileText,
+  PlusCircle,
+  CreditCard,
+  Settings,
   ChevronLeft,
+  Menu,
 } from "lucide-react";
 import { useState } from "react";
-import AdminDashboard from "./dashboard/page";
-import AdminClientpage from "./clients/page";
-import AdminLeadsPage from "./leads/page";
 
 const sidebarOptions = [
+  { icon: <UserCog className="w-6 h-6" />, title: "Details", path: "details" },
+  { icon: <Clock className="w-6 h-6" />, title: "Tracker", path: "tracker" },
   {
-    icon: <Home className="w-6 h-6" />,
-    title: "Dashboard",
-    path: "/admin/dashboard",
+    icon: <FileText className="w-6 h-6" />,
+    title: "View Plan",
+    path: "view-plan",
   },
   {
-    icon: <BarChart2 className="w-6 h-6" />,
-    title: "Leads",
-    path: "/admin/leads",
+    icon: <PlusCircle className="w-6 h-6" />,
+    title: "Create Plan",
+    path: "create-plan",
   },
   {
-    icon: <UserCog className="w-6 h-6" />,
-    title: "Clients",
-    path: "/admin/clients",
+    icon: <CreditCard className="w-6 h-6" />,
+    title: "Transactions",
+    path: "transactions",
   },
   {
     icon: <Settings className="w-6 h-6" />,
     title: "Settings",
-    path: "/admin/settings",
+    path: "settings",
   },
 ];
 
-export default function DashboardLayout() {
+export default function DashboardLayout({ children, params }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Function to determine the active page component
-  const getActivePage = () => {
-    console.log("Current Pathname:", pathname); // Debugging line
+  // Extract clientId from params
+  const { clientId } = params;
 
-    // Handle static routes
-    switch (pathname) {
-      case "/admin/dashboard":
-        return <AdminDashboard />;
-      case "/admin/leads":
-        return <AdminLeadsPage />;
-      case "/admin/clients":
-        return <AdminClientpage />;
-      case "/admin/settings":
-        return <AdminLeadsPage />; // Assuming this is intentional
-      default:
-        return <AdminDashboard />;
-    }
-  };
+  // Get the active route
+  const activeRoute = pathname.split("/").pop();
 
   return (
-    <div className="mt-20 flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 mt-12">
       {/* Sidebar */}
       <div
         className={`bg-white shadow-lg transition-all duration-300 p-6 ${
-          isSidebarOpen ? "w-64" : "w-24"
+          isSidebarOpen ? "w-64" : "w-20"
         } hidden md:flex flex-col relative`}
       >
         {/* Sidebar Toggle Button */}
@@ -84,31 +69,31 @@ export default function DashboardLayout() {
           )}
         </button>
 
-        {/* Sidebar Title (Visible when expanded) */}
-        {isSidebarOpen && <h2 className="text-xl font-bold mb-6">Dashboard</h2>}
-
         {/* Sidebar Navigation */}
         <ul className="space-y-4">
           {sidebarOptions.map((option, index) => (
             <li
               key={index}
               className={`flex items-center p-3 rounded-lg transition cursor-pointer ${
-                pathname === option.path
+                activeRoute === option.path
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-100"
               }`}
-              onClick={() => router.push(option.path)}
+              onClick={() => router.push(`/clients/${clientId}/${option.path}`)}
             >
               {option.icon}
-              {isSidebarOpen && <span className="ml-3">{option.title}</span>}
+              {isSidebarOpen && (
+                <span className="ml-3 whitespace-nowrap">{option.title}</span>
+              )}
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Main Content - Expands when Sidebar is Collapsed */}
-      <div className={`p-6 transition-all duration-300 flex-1`}>
-        {getActivePage()}
+      {/* Main Content */}
+      <div className="flex-1 p-6 overflow-y-auto">
+        {/* Page Content */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">{children}</div>
       </div>
 
       {/* Mobile Bottom Navigation */}
@@ -117,9 +102,9 @@ export default function DashboardLayout() {
           <div
             key={index}
             className={`flex flex-col items-center cursor-pointer ${
-              pathname === option.path ? "text-purple-600" : "text-gray-600"
+              activeRoute === option.path ? "text-purple-600" : "text-gray-600"
             }`}
-            onClick={() => router.push(option.path)}
+            onClick={() => router.push(`/clients/${clientId}/${option.path}`)}
           >
             {option.icon}
             <span className="text-xs mt-1">{option.title}</span>

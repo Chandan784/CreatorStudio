@@ -1,18 +1,15 @@
 "use client";
 
-import { Images } from "lucide-react";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // Define the base URL for the backend
-const BASE_URL = "http://localhost:8000/api/v1/requirements";
+const BASE_URL = "http://localhost:8000/api/v1/influencer";
 
 export default function InfluencerRequirementForm({ userId }) {
   // State for form data
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
     niche: "",
-    profilePhoto: "",
     platforms: "",
     followers: "",
     goal: "",
@@ -33,14 +30,8 @@ export default function InfluencerRequirementForm({ userId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `${BASE_URL}/users/${userId}/requirements`
-        );
-        if (!response.ok) throw new Error("Failed to fetch data");
-        const result = await response.json();
-
-        // Extract the data from the response
-        const data = result.data;
+        const response = await axios.get(`${BASE_URL}/users/${userId}/details`);
+        const data = response.data.data;
 
         // Normalize data to ensure all fields are initialized
         const normalizedData = {
@@ -101,19 +92,15 @@ export default function InfluencerRequirementForm({ userId }) {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = `${BASE_URL}/users/${userId}/requirements`;
-    const method = isEditing ? "PUT" : "POST";
+    const url = `${BASE_URL}/users/${userId}/details`;
 
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error("Failed to save data");
-      alert("Data saved successfully!");
+      const response = await axios.put(url, formData);
+      if (response.status === 200 || response.status === 201) {
+        alert("Data saved successfully!");
+      } else {
+        throw new Error("Failed to save data");
+      }
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Failed to save data.");

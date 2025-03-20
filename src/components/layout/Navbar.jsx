@@ -30,19 +30,10 @@ export default function Navbar() {
           className="text-2xl font-bold text-indigo-600 cursor-pointer"
           onClick={() => router.push("/")}
         >
-          MyStudio
+          OnlyCreation
         </h1>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          <a
-            href="tel:+6370302039"
-            className="flex items-center text-gray-700 font-medium hover:text-indigo-600 transition"
-          >
-            📞 Call Now: +91 63703 02039
-          </a>
-
-          {/* Login Button or Profile Icon */}
           {!isLoggedIn ? (
             <a
               href="/auth"
@@ -57,7 +48,6 @@ export default function Navbar() {
             />
           )}
         </div>
-
         {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-4">
           <a

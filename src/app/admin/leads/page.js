@@ -319,26 +319,7 @@ export default function LeadsPage() {
               key={lead._id}
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
             >
-              {/* Card Content */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-                {/* Name */}
-                <div>
-                  <label className="text-sm text-gray-500">Name</label>
-                  <p className="font-semibold">{lead.userId?.name}</p>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="text-sm text-gray-500">Email</label>
-                  <p className="font-semibold">{lead.userId?.email}</p>
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="text-sm text-gray-500">Phone</label>
-                  <p className="font-semibold">{lead.userId?.phone || "N/A"}</p>
-                </div>
-
                 {/* Point of Contact */}
                 <div>
                   <label className="text-sm text-gray-500">
@@ -347,13 +328,32 @@ export default function LeadsPage() {
                   {editingLeadId === lead._id ? (
                     <input
                       type="text"
-                      value={editedLead.pointOfContact || ""}
-                      onChange={(e) => handleInputChange(e, "pointOfContact")}
+                      value={
+                        typeof editedLead.pointOfContact === "string"
+                          ? editedLead.pointOfContact
+                          : editedLead.pointOfContact?.name || ""
+                      }
+                      onChange={(e) =>
+                        setEditedLead((prev) => ({
+                          ...prev,
+                          pointOfContact: e.target.value,
+                        }))
+                      }
                       className="w-full p-1 border rounded"
                     />
                   ) : (
-                    <p className="font-semibold">{lead.pointOfContact}</p>
+                    <p className="font-semibold">
+                      {typeof lead.pointOfContact === "string"
+                        ? lead.pointOfContact
+                        : `${lead.pointOfContact.name} (${lead.pointOfContact.email})`}
+                    </p>
                   )}
+                </div>
+
+                {/* User Name */}
+                <div>
+                  <label className="text-sm text-gray-500">User Name</label>
+                  <p className="font-semibold">{lead.userId.name}</p>
                 </div>
 
                 {/* Interest Level */}
@@ -445,13 +445,19 @@ export default function LeadsPage() {
                   {editingLeadId === lead._id ? (
                     <input
                       type="date"
-                      value={editedLead.dateOfFollowUp?.split("T")[0] || ""}
+                      value={
+                        editedLead.dateOfFollowUp
+                          ? editedLead.dateOfFollowUp.split("T")[0]
+                          : ""
+                      }
                       onChange={(e) => handleInputChange(e, "dateOfFollowUp")}
                       className="w-full p-1 border rounded"
                     />
                   ) : (
                     <p className="font-semibold">
-                      {new Date(lead.dateOfFollowUp).toLocaleDateString()}
+                      {lead.dateOfFollowUp
+                        ? new Date(lead.dateOfFollowUp).toLocaleDateString()
+                        : "N/A"}
                     </p>
                   )}
                 </div>
@@ -523,7 +529,7 @@ export default function LeadsPage() {
                   <div>
                     <label className="text-sm text-gray-500">Phone</label>
                     <p className="font-semibold">
-                      {lead.userId?.phone || "N/A"}
+                      {lead.userId?.phoneNumber || "N/A"}
                     </p>
                   </div>
                   <div>

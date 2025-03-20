@@ -1,22 +1,19 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
-  Home,
-  Settings,
-  FileText,
-  CreditCard,
-  Menu,
-  MoreHorizontal,
-  ChevronLeft,
   LayoutDashboard,
-  Activity, // Icon for Tracker
-  DollarSign, // Icon for Transactions
+  MoreHorizontal,
+  Activity,
+  Menu,
+  ChevronLeft,
 } from "lucide-react";
 import { useState } from "react";
 import CreatorDashboardPage from "./dashboard/page";
 import CreatorDetailsPgae from "./details/page";
-import CreatorTrackerPage from "./tracker/page";
+import CreatorTrackerPage from "./tracker/page"; // Update import path
+import CreatorPlansPage from "./plan/page";
+import CreatorProjectDetailsPage from "./project-details/page";
 
 const sidebarOptions = [
   {
@@ -31,26 +28,33 @@ const sidebarOptions = [
   },
   {
     icon: <Activity className="w-6 h-6" />,
-    title: "Tracker",
-    path: "/creator/tracker",
+    title: "Plan",
+    path: "/creator/plan",
   },
 ];
 
 export default function DashboardLayout() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const planId = searchParams.get("planId");
+
+  const projectId = searchParams.get("projectId"); // Extract planId from query parameters
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Function to determine the active page component
   const getActivePage = () => {
     switch (pathname) {
-      case "/creator/dashhboard":
+      case "/creator/dashboard":
         return <CreatorDashboardPage />;
       case "/creator/details":
         return <CreatorDetailsPgae />;
+      case "/creator/plan":
+        return <CreatorPlansPage />;
       case "/creator/tracker":
-        return <CreatorTrackerPage />;
-
+        return <CreatorTrackerPage planId={planId} />;
+      case "/creator/project-details":
+        return <CreatorProjectDetailsPage projectId={projectId} />; // Pass planId as a prop
       default:
         return <CreatorDashboardPage />;
     }

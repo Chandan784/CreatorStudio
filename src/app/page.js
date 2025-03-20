@@ -1,6 +1,10 @@
+"use client";
 import Head from "next/head";
 
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  let router = useRouter();
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
       <Head>
@@ -21,7 +25,10 @@ export default function Home() {
           Connect with top influencers, video editors, scriptwriters, studios,
           agencies, and businesses to elevate your brand.
         </p>
-        <button className="bg-white text-purple-600 px-8 py-4 rounded-lg hover:bg-gray-100 text-lg font-semibold transition duration-300 transform hover:scale-105">
+        <button
+          className="bg-white text-purple-600 px-8 py-4 rounded-lg hover:bg-gray-100 text-lg font-semibold transition duration-300 transform hover:scale-105"
+          onClick={() => router.push("/creator")}
+        >
           Get Started
         </button>
       </section>
