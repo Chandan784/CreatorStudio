@@ -62,6 +62,26 @@ const Icons = ({ icon, className }) => {
                 </g>
             </svg>
         ),
+        errorUser: (
+            <svg className="w-16 h-16" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <g fill="none" stroke="#e61e1e" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+                    <path strokeDasharray="20" strokeDashoffset="20" d="M5 21v-1c0 -2.21 1.79 -4 4 -4h4c2.21 0 4 1.79 4 4v1">
+                        <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0" />
+                    </path>
+                    <path strokeDasharray="20" strokeDashoffset="20" d="M11 13c-1.66 0 -3 -1.34 -3 -3c0 -1.66 1.34 -3 3 -3c1.66 0 3 1.34 3 3c0 1.66 -1.34 3 -3 3Z">
+                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.2s" values="20;0" />
+                    </path>
+                    <path strokeDasharray="6" strokeDashoffset="6" d="M20 3v4">
+                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="6;0" />
+                        <animate attributeName="stroke-width" begin="1s" dur="3s" keyTimes="0;0.1;0.2;0.3;1" repeatCount="indefinite" values="2;3;3;2;2" />
+                    </path>
+                    <path strokeDasharray="2" strokeDashoffset="2" d="M20 11v0.01">
+                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s" values="2;0" />
+                        <animate attributeName="stroke-width" begin="1.3s" dur="3s" keyTimes="0;0.1;0.2;0.3;1" repeatCount="indefinite" values="2;3;3;2;2" />
+                    </path>
+                </g>
+            </svg>
+        ),
 
 
     };

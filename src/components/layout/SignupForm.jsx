@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import Icons from "../common/Icon";
 
 const SignupForm = ({
   email,
@@ -18,6 +20,30 @@ const SignupForm = ({
   setIsLogin,
   setMessage,
 }) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+  
+    try {
+      await handleAuth(e);
+    } catch (err) {
+      if (err.response?.status === 409 && err.response?.data?.message === "User already exists") {
+        setError("An account with this email already exists. Please login instead.");
+      } else {
+        setError(err.response?.data?.message || "Registration failed. Please try again.");
+      }
+
+      const errorTimeout = setTimeout(() => {
+        setError("");
+      }, 3000);
+      
+      
+      return () => clearTimeout(errorTimeout);
+    }
+  };
   return (
     <>
       <h2 className="text-3xl font-semibold text-center">
@@ -25,7 +51,12 @@ const SignupForm = ({
       </h2>
       <p className="text-center text-gray-500">Join us today!</p>
 
-      <form onSubmit={handleAuth} className="mt-6 space-y-4">
+      <div className={`mb-4 p-8 flex gap-2 items-center max-w-[300px] z-[400] lg:max-w-[500px] w-full bg-black text-red-700 rounded-md fixed top-1/2  duration-300 ${error ? "left-1" : "-left-full"}`}>
+       <Icons icon={"errorUser"} />
+        {error}
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         {/* Full Name */}
         <div>
           <label className="block text-sm font-medium">Full Name</label>
@@ -98,11 +129,10 @@ const SignupForm = ({
           whileHover={{ scale: !loading ? 1.05 : 1 }}
           whileTap={{ scale: !loading ? 0.95 : 1 }}
           type="submit"
-          className={`w-full py-3 rounded-lg mt-4 ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
-          }`}
+          className={`w-full py-3 rounded-lg mt-4 ${loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           disabled={loading}
         >
           {loading ? "Processing..." : "Sign up"}

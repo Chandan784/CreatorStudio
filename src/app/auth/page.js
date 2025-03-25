@@ -76,13 +76,19 @@ export default function Authentication() {
             password,
             role: userType,
             phoneNumber,
-          } // Include phoneNumber in the request
+          }
         );
 
+        if (data.message === "User already exists") {
+          throw new Error("User already exists");
+        }
         setShowVerificationMessage(true);
       }
     } catch (err) {
       console.log(err);
+      if (err.response?.status === 409 || err.message === "User already exists") {
+        throw err;
+      }
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
@@ -131,11 +137,11 @@ export default function Authentication() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen mt-12 bg-gray-100">
       {/* Left Side (Form / Message) */}
-      <div className="flex flex-col justify-center w-full md:w-3/5 p-12">
+      <div className="flex flex-col justify-center w-full md:w-3/5 py-12 px-6 xl:p-12">
         <motion.div
-          className="w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 relative"
+          className="w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 lg:p-8 relative"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
