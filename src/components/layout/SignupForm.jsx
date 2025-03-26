@@ -17,7 +17,7 @@ const SignupForm = ({
   handleAuth,
   setIsLogin,
   setMessage,
-  message,
+  error,
 }) => {
   return (
     <>
@@ -25,7 +25,7 @@ const SignupForm = ({
         Sign up for <span className="text-blue-600 font-bold">Amilo AI</span>
       </h2>
       <p className="text-center text-gray-500">Join us today!</p>
-      <h2 className="text-center text-red-600 font-semibold">{message}</h2>
+      <h2 className="text-center text-red-600 font-semibold">{error}</h2>
       <form onSubmit={handleAuth} className="mt-6 space-y-4">
         {/* Full Name */}
         <div>

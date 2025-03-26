@@ -42,6 +42,7 @@ export default function Authentication() {
     if (!password || (!isLogin && (!fullName || !userType || !phoneNumber))) {
       setError("All fields are required.");
       setLoading(false);
+      console.log("result", error);
       return;
     }
 
@@ -51,8 +52,8 @@ export default function Authentication() {
           "http://localhost:8000/api/v1/auth/login",
           { email, password }
         );
-        console.log(data, "Result");
-        setMessage(data.message)
+        console.log(data, "Result");    //Console.log added to see the message on the console
+        setMessage(data.message);       // setMessage() use to get and show the data message err on Ui
         dispatch(login(data.token));
 
         const userRole = decodeToken(data.token).role;
@@ -101,7 +102,7 @@ export default function Authentication() {
         "http://localhost:8000/api/v1/auth/forgot-password",
         { email }
       );
-
+      console.log("Result: ", data)
       setMessage(data.message);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
@@ -167,6 +168,8 @@ export default function Authentication() {
               handleForgotPassword={handleForgotPassword}
               setShowForgotPassword={setShowForgotPassword}
               setIsLogin={setIsLogin}
+              setMessage= {setMessage}
+              message= {message}
             />
           ) : !showVerificationMessage ? (
             isLogin ? (
@@ -198,7 +201,7 @@ export default function Authentication() {
                 handleAuth={handleAuth}
                 setIsLogin={setIsLogin}
                 setMessage={setMessage}
-                message= {message}
+                error={error}      // Add message 
               />
             )
           ) : (

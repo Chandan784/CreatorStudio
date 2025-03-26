@@ -9,6 +9,7 @@ const ForgotPasswordForm = ({
   handleForgotPassword,
   setShowForgotPassword,
   setIsLogin,
+  message,
 }) => {
   return (
     <>
@@ -16,6 +17,7 @@ const ForgotPasswordForm = ({
       <p className="text-center text-gray-500">
         Enter your email to reset your password.
       </p>
+      <h3 className="text-red-700 font-semibold text-center text-sm">{message}</h3>
 
       <form onSubmit={handleForgotPassword} className="mt-6 space-y-4">
         <div>
