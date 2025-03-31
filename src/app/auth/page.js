@@ -168,7 +168,6 @@ export default function Authentication() {
               handleForgotPassword={handleForgotPassword}
               setShowForgotPassword={setShowForgotPassword}
               setIsLogin={setIsLogin}
-              setMessage= {setMessage}
               message= {message}
             />
           ) : !showVerificationMessage ? (
