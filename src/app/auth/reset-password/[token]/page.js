@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 export default function ResetPassword({ params }) {
   const router = useRouter();
   let token = params.token;
+  console.log("Token" , token);
+  
 
   // Get the reset token from the URL
 
@@ -42,8 +44,8 @@ export default function ResetPassword({ params }) {
         `http://localhost:8000/api/v1/auth/reset-password/${token}`,
         { newPassword }
       );
-
-      setMessage("Password reset successful. You can now login.");
+      console.log('Reset Password Data', data);
+      setMessage(data.message);
       setTimeout(() => {
         router.push("/auth"); // Redirect to login page after successful reset
       }, 3000);
