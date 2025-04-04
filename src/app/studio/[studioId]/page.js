@@ -91,7 +91,7 @@ export default function StudioDetails() {
 
       // Fetch availability from the backend
       const response = await axios.get(
-        `http://localhost:8000/api/v1/availability/${studio.id}/${formattedDate}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/${studio.id}/${formattedDate}`
       );
 
       if (response.data.success) {
@@ -174,7 +174,7 @@ export default function StudioDetails() {
 
       // Make the API call to create a booking
       const response = await axios.post(
-        "http://localhost:8000/api/v1/bookings",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/bookings`,
         payload
       );
 
