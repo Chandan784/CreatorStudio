@@ -12,7 +12,7 @@ const ProjectsPage = () => {
     const fetchProjects = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/projects"
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/projects`
         ); // Replace with your API endpoint
         setProjects(response.data);
       } catch (error) {
@@ -29,7 +29,7 @@ const ProjectsPage = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/v1/projects/${updatedProject._id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/projects/${updatedProject._id}`,
         updatedProject
       ); // Replace with your API endpoint
       setProjects((prevProjects) =>

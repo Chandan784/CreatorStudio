@@ -63,7 +63,7 @@ export default function StudioAvailabilityPage() {
         const responses = await Promise.all(
           datesForMonth.map((date) =>
             axios.get(
-              `http://localhost:8000/api/v1/availability/${studioId}/${date}`
+              `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/${studioId}/${date}`
             )
           )
         );
@@ -128,7 +128,7 @@ export default function StudioAvailabilityPage() {
       }));
 
       const response = await axios.post(
-        `http://localhost:8000/api/v1/availability/bulk`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/bulk`,
         payload
       );
 

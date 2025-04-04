@@ -237,7 +237,7 @@ const StudioOnboardingForm = () => {
         };
 
         // Make the API call
-        const response = await fetch("http://localhost:8000/api/v1/studio", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/studio`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
