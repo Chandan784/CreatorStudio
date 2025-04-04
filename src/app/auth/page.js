@@ -49,7 +49,7 @@ export default function Authentication() {
     try {
       if (isLogin) {
         const { data } = await axios.post(
-          "http://localhost:8000/api/v1/auth/login",
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/login`,
           { email, password }
         );
         console.log(data, "Result");    //Console.log added to see the message on the console
@@ -71,7 +71,7 @@ export default function Authentication() {
         }
       } else {
         const { data } = await axios.post(
-          "http://localhost:8000/api/v1/auth/register",
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/register`,
           {
             name: fullName,
             email,
@@ -99,7 +99,7 @@ export default function Authentication() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/auth/forgot-password",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
         { email }
       );
       console.log("Result: ", data)
@@ -119,7 +119,7 @@ export default function Authentication() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/auth/reset-password",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password`,
         { token: resetToken, newPassword }
       );
 
