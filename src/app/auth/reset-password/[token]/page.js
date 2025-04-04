@@ -44,7 +44,7 @@ export default function ResetPassword({ params }) {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password/${token}`, 
         { newPassword }
       );
-      console.log('Reset Password Data', data);
+      console.log('Reset Password Data', data);// trying some console logs to see what's going on
       setMessage(data.message);
       setTimeout(() => {
         router.push("/auth"); // Redirect to login page after successful reset
