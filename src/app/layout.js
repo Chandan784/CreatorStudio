@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
-import { useRouter } from "next/navigation"; // Import useRouter for routing
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import store from "@/store/store";
@@ -22,10 +22,27 @@ const geistMono = Geist_Mono({
 
 export default function RootLayout({ children }) {
   const router = useRouter();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    console.log("Page loaded, current route:", router.asPath);
-  }, [router.asPath]);
+  // useEffect(() => {
+  //   const isAuthenticated = checkAuth(); // Implement your auth check logic
+
+  //   // List of public routes that don't require authentication
+  //   const publicRoutes = ["/login", "/register", "/forgot-password"];
+
+  //   if (!isAuthenticated && !publicRoutes.includes(pathname)) {
+  //     router.push("/auth");
+  //   }
+  // }, [pathname, router]);
+
+  // Helper function to check authentication
+  // const checkAuth = () => {
+  // Check token in localStorage (client-side only)
+  //   if (typeof window !== "undefined") {
+  //     return !!localStorage.getItem("token");
+  //   }
+  //   return false;
+  // };
 
   return (
     <Provider store={store}>
@@ -34,16 +51,14 @@ export default function RootLayout({ children }) {
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <div className="flex min-h-screen flex-col">
-            {/* Navbar */}
-            <Navbar />
-
-            {/* Sidebar */}
+            {/* Conditionally render Navbar if not on auth pages */}
+            {!["/login", "/register"].includes(pathname) && <Navbar />}
 
             {/* Main Content */}
             <main className="flex-1">{children}</main>
 
-            {/* Footer */}
-            <Footer />
+            {/* Conditionally render Footer if not on auth pages */}
+            {!["/login", "/register"].includes(pathname) && <Footer />}
           </div>
         </body>
       </html>

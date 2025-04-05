@@ -13,7 +13,7 @@ export default function CreatorPlansPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/v1/plans/user/${user.id}`)
+      .get(`http://localhost:8000/api/v1/plans/user/67d173ffd0f78d32ad046925`)
       .then((response) => {
         setPlans(response.data);
         setLoading(false);
