@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { login } from "@/store/slice/authSlice";
-import { decodeToken } from "@/utils/decodeToken";
+
+import { useSelector, useDispatch } from "react-redux";
+import { loginUser, registerUser } from "@/store/slice/authSlice";
 import LoginForm from "@/components/layout/LoginForm";
 import SignupForm from "@/components/layout/SignupForm";
 import ForgotPasswordForm from "@/components/layout/ForgotPasswordForm";
@@ -15,6 +15,7 @@ import VerificationMessage from "@/components/layout/VerificationMessage";
 import ResetPasswordForm from "@/components/layout/ResetPasswordForm";
 
 export default function Authentication() {
+  let dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,8 +32,6 @@ export default function Authentication() {
   const [resetToken, setResetToken] = useState("");
 
   const router = useRouter();
-  const dispatch = useDispatch();
-
   const handleAuth = async (e) => {
     e.preventDefault();
     setError("");
@@ -42,55 +41,52 @@ export default function Authentication() {
     if (!password || (!isLogin && (!fullName || !userType || !phoneNumber))) {
       setError("All fields are required.");
       setLoading(false);
-      console.log("result", error);
       return;
     }
 
     try {
       if (isLogin) {
-        const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/login`,
-          { email, password }
-        );
-        console.log(data, "Result");    //Console.log added to see the message on the console
-        setMessage(data.message);       // setMessage() use to get and show the data message err on Ui
-        dispatch(login(data.token));
+        const res = await dispatch(loginUser({ email, password })).unwrap();
+        setMessage(res.message);
+        const userRole = res.user?.role;
 
-        const userRole = decodeToken(data.token).role;
-
-        if (userRole === "studioOwner") {
-          router.push("/studio-owner/dashboard");
-        } else if (userRole === "influencer") {
-          router.push("/creator/dashboard");
-        } else if (userRole === "business") {
-          router.push("/creator");
-        } else if (userRole === "agency") {
-          router.push("/dashboard");
-        } else {
-          router.push("/creator");
+        switch (userRole) {
+          case "studioOwner":
+            router.push("/studio-owner/dashboard");
+            break;
+          case "influencer":
+            router.push("/creator/dashboard");
+            break;
+          case "business":
+            router.push("/creator");
+            break;
+          case "agency":
+            router.push("/dashboard");
+            break;
+          default:
+            router.push("/creator");
+            break;
         }
       } else {
-        const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/register`,
-          {
+        await dispatch(
+          registerUser({
             name: fullName,
             email,
             password,
             role: userType,
             phoneNumber,
-          } // Include phoneNumber in the request
-        );
+          })
+        ).unwrap();
 
         setShowVerificationMessage(true);
       }
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Something went wrong.");
+      setError(err || "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
-
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setError("");
@@ -102,7 +98,7 @@ export default function Authentication() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
         { email }
       );
-      console.log("Result: ", data)
+      console.log("Result: ", data);
       setMessage(data.message);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
@@ -168,7 +164,7 @@ export default function Authentication() {
               handleForgotPassword={handleForgotPassword}
               setShowForgotPassword={setShowForgotPassword}
               setIsLogin={setIsLogin}
-              message= {message}
+              message={message}
             />
           ) : !showVerificationMessage ? (
             isLogin ? (
@@ -182,7 +178,7 @@ export default function Authentication() {
                 setIsLogin={setIsLogin}
                 setShowForgotPassword={setShowForgotPassword}
                 setMessage={setMessage}
-                message = {message}
+                message={message}
               />
             ) : (
               <SignupForm
@@ -200,7 +196,7 @@ export default function Authentication() {
                 handleAuth={handleAuth}
                 setIsLogin={setIsLogin}
                 setMessage={setMessage}
-                error={error}      // Add message 
+                error={error} // Add message
               />
             )
           ) : (

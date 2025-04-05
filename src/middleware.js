@@ -7,7 +7,7 @@ export function middleware(request) {
   console.log("Pathname762746724:", request.nextUrl.pathname);
 
   // 1. Check for token
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get("connect.sid")?.value;
   console.log("Token exists:", !!token);
 
   // Public routes (no token needed)

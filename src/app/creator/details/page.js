@@ -4,14 +4,14 @@ import React, { useEffect, useState } from "react";
 import getUser from "@/utils/getUser";
 import BusinessRequirementForm from "@/components/layout/BusinessDetailsForm";
 import InfluencerRequirementForm from "@/components/layout/InfluencerDetailsForm";
-
+import { useSelector, useDispatch } from "react-redux";
+import { redirect } from "next/dist/server/api-utils";
 function CreatorDetailsPgae() {
-  let [user, setUser] = useState({});
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    let userData = getUser();
-    setUser(userData);
-  }, []);
+  if (!user) {
+    redirect("/auth");
+  }
 
   if (user.role == "Business") return <BusinessRequirementForm />;
   if (user.role == "Influencer")
