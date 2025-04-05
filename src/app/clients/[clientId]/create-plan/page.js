@@ -25,7 +25,7 @@ export default function CreatePlanPage({ params }) {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:8000/api/v1/deliverables"
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/deliverables`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch deliverables");
@@ -183,7 +183,8 @@ export default function CreatePlanPage({ params }) {
     console.log("New Plan to be saved:", newPlan); // Debugging log
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/plans", {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/plans`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
