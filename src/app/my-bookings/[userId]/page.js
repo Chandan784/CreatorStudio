@@ -13,7 +13,7 @@ export default function UserBookingsPage() {
     const fetchBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/bookings/user/${userId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/bookings/user/${userId}`
         );
         if (response.data.success) {
           setBookings(response.data.bookings);
@@ -35,7 +35,7 @@ export default function UserBookingsPage() {
   const handleCancelBooking = async (bookingId) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/v1/bookings/${bookingId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/bookings/${bookingId}`,
         {
           status: "cancelled",
         }

@@ -35,7 +35,7 @@ export default function LeadsPage() {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/leads");
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads`);
         setLeadsData(data);
         setFilteredLeads(data); // Initialize filtered leads with all data
       } catch (error) {
@@ -55,7 +55,7 @@ export default function LeadsPage() {
   // Function to handle saving edited lead
   const handleSaveClick = async (id) => {
     try {
-      await axios.put(`http://localhost:8000/api/v1/leads/${id}`, editedLead);
+      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads/${id}`, editedLead);
       setLeadsData((prev) =>
         prev.map((lead) => (lead._id === id ? editedLead : lead))
       );

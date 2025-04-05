@@ -14,7 +14,7 @@ export default function ClientDetailsPage({ params }) {
     const fetchClientDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/v1/clients/${clientId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/clients/${clientId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch client details");
