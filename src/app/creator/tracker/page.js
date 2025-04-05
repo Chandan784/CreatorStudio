@@ -15,7 +15,7 @@ const CreatorTrackerPage = ({ planId }) => {
   useEffect(() => {
     if (planId) {
       axios
-        .get(`http://localhost:8000/api/v1/projects/${planId}/projects`)
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/projects/${planId}/projects`)
         .then((response) => {
           setProjects(response.data);
           setLoading(false);
