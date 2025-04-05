@@ -35,7 +35,9 @@ export default function LeadsPage() {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads`);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads`
+        );
         setLeadsData(data);
         setFilteredLeads(data); // Initialize filtered leads with all data
       } catch (error) {

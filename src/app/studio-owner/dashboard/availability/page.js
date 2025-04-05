@@ -128,7 +128,7 @@ export default function StudioAvailabilityPage() {
       }));
 
       const response = await axios.post(
-        `http://localhost:8000/api/v1/availability/bulk`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/bulk`,
         payload
       );
 
