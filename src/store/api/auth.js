@@ -57,7 +57,7 @@ export const fetchUser = createAsyncThunk(
       }
     }
   );
-  
+
  // LOGOUT USER
   export const logoutUser = createAsyncThunk(
     "auth/logoutUser",
@@ -78,3 +78,47 @@ export const fetchUser = createAsyncThunk(
       }
     }
   );
+
+  // FORGOT PASSWORD
+export const forgotUserPassword = createAsyncThunk(
+    "auth/forgotPassword",
+    async ({email}, thunkAPI) => {
+      try {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
+          { email }
+        );
+        console.log("Forgot pass response" , res);
+        
+        return res.data;
+        
+      } catch (err) {
+        return thunkAPI.rejectWithValue(
+          err.response?.data?.message || "Something went wrong."
+        );
+      } 
+      
+    }
+  )
+
+  // RESET USER PASSWORD
+export const resetUserPassword = createAsyncThunk(
+    "auth/resetPassword",
+    async ({resetToken, newPassword}, thunkAPI) => {
+      try {
+        const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password`,
+                {  resetToken, newPassword }
+              );
+        console.log("Reset pass response" , res);
+        
+        return res.data;
+        
+      } catch (err) {
+        return thunkAPI.rejectWithValue(
+          err.response?.data?.message || "Something went wrong."
+        );
+      } 
+      
+    }
+  )
+  
