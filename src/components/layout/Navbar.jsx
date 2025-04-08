@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUser, logoutUser } from "@/store/slice/authSlice";
+import { fetchUser, logoutUser } from "@/store/api/auth";
 
 export default function Navbar() {
   const router = useRouter();
