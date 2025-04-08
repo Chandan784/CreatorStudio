@@ -7,7 +7,7 @@ import axios from "axios";
 import Image from "next/image";
 
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser, registerUser } from "@/store/slice/authSlice";
+import { forgotUserPassword, loginUser, registerUser, resetUserPassword } from "@/store/slice/authSlice";
 import LoginForm from "@/components/layout/LoginForm";
 import SignupForm from "@/components/layout/SignupForm";
 import ForgotPasswordForm from "@/components/layout/ForgotPasswordForm";
@@ -94,12 +94,9 @@ export default function Authentication() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
-        { email }
-      );
-      console.log("Result: ", data);
-      setMessage(data.message);
+      const res = await dispatch(forgotUserPassword({ email })).unwrap();
+      console.log("Result: ", res);
+      setMessage(res.data.message);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
@@ -114,10 +111,7 @@ export default function Authentication() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password`,
-        { token: resetToken, newPassword }
-      );
+      const {data} = await dispatch(resetUserPassword({ token:resetToken, newPassword })).unwrap();
 
       setMessage(data.message);
       setShowResetPassword(false);
