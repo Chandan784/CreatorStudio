@@ -20,6 +20,8 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+
+
 // SIGNUP
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
@@ -79,6 +81,50 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// FORGOT PASSWORD
+export const forgotUserPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async ({email}, thunkAPI) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
+        { email }
+      );
+      console.log("Forgot pass response" , res);
+      
+      return res.data;
+      
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Something went wrong."
+      );
+    } 
+    
+  }
+)
+
+// RESET USER PASSWORD
+export const resetUserPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({resetToken, newPassword}, thunkAPI) => {
+    try {
+      const res = await axios.post(
+              `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password`,
+              {  resetToken, newPassword }
+            );
+      console.log("Reset pass response" , res);
+      
+      return res.data;
+      
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Something went wrong."
+      );
+    } 
+    
+  }
+)
+
+
 const initialState = {
   user: null,
   isLoggedIn: false,
@@ -103,7 +149,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.message = action.payload.message;
         console.log("message", state.message);
-        state.isLoggedIn = true;
+        state.isLoggedIn = action.payload.message === "Login successful";
+
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -156,7 +203,37 @@ const authSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+      // FORGOT PASSWORD
+      .addCase(forgotUserPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotUserPassword.fulfilled, (state,action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.isLoggedIn = false;
+      })
+      .addCase(forgotUserPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // RESET PASSWORD
+      .addCase(resetUserPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetUserPassword.fulfilled, (state,action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.isLoggedIn = true;
+      })
+      .addCase(resetUserPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 

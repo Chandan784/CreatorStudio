@@ -11,14 +11,17 @@ export function middleware(request) {
   console.log("Token exists:", !!token);
 
   // Public routes (no token needed)
-  const publicRoutes = ["/auth", "/register", "/"];
-  console.log(
-    "Is public route:",
-    publicRoutes.includes(request.nextUrl.pathname)
-  );
+  const publicRoutes = ["/auth", "/verify", "/"];
+
+const isPublic = publicRoutes.some(route => 
+  request.nextUrl.pathname.startsWith(route)
+);
+
+console.log(isPublic);
 
   // 2. Block protected routes if no token
-  if (!token && !publicRoutes.includes(request.nextUrl.pathname)) {
+  if (!token && !isPublic) {
+
     console.log("🔒 Redirecting to /login (no token)");
     return NextResponse.redirect(new URL("/auth", request.url));
   }
