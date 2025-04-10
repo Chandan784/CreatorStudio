@@ -1,130 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import { loginUser, logoutUser, fetchUser, registerUser,forgotUserPassword, resetUserPassword } from "../api/auth";
 
-// LOGIN
-export const loginUser = createAsyncThunk(
-  "auth/loginUser",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Login failed"
-      );
-    }
-  }
-);
-
-
-
-// SIGNUP
-export const registerUser = createAsyncThunk(
-  "auth/registerUser",
-  async ({ name, email, password, role, phoneNumber }, thunkAPI) => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/register`,
-        { name, email, password, role, phoneNumber }
-      );
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Registration failed"
-      );
-    }
-  }
-);
-
-// FETCH USER
-export const fetchUser = createAsyncThunk(
-  "auth/fetchUser",
-  async (_, thunkAPI) => {
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/me`,
-        {
-          withCredentials: true,
-        }
-      );
-      return res.data.user;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Failed to fetch user"
-      );
-    }
-  }
-);
-
-// LOGOUT
-export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
-  async (_, thunkAPI) => {
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      return true;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Logout failed"
-      );
-    }
-  }
-);
-
-// FORGOT PASSWORD
-export const forgotUserPassword = createAsyncThunk(
-  "auth/forgotPassword",
-  async ({email}, thunkAPI) => {
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/forgot-password`,
-        { email }
-      );
-      console.log("Forgot pass response" , res);
-      
-      return res.data;
-      
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Something went wrong."
-      );
-    } 
-    
-  }
-)
-
-// RESET USER PASSWORD
-export const resetUserPassword = createAsyncThunk(
-  "auth/resetPassword",
-  async ({resetToken, newPassword}, thunkAPI) => {
-    try {
-      const res = await axios.post(
-              `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/reset-password`,
-              {  resetToken, newPassword }
-            );
-      console.log("Reset pass response" , res);
-      
-      return res.data;
-      
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Something went wrong."
-      );
-    } 
-    
-  }
-)
-
-
+                                                            //forgotUserPassword and resetUserPassword are added currently
 const initialState = {
   user: null,
   isLoggedIn: false,
@@ -136,7 +13,12 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    clearAuthState: (state) => {
+      state.error = null;
+      state.message = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // LOGIN
@@ -147,6 +29,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload.user;
         state.message = action.payload.message;
         console.log("message", state.message);
         state.isLoggedIn = action.payload.message === "Login successful";
@@ -165,7 +48,9 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload.user;
         state.message = action.payload.message;
+        state.isLoggedIn = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -236,5 +121,6 @@ const authSlice = createSlice({
       })
   },
 });
+
 
 export default authSlice.reducer;
