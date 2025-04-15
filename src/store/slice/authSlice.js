@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, logoutUser, fetchUser, registerUser,forgotUserPassword, resetUserPassword } from "../api/auth";
 
-                                                            //forgotUserPassword and resetUserPassword are added currently
 const initialState = {
   user: null,
   isLoggedIn: false,

@@ -1,10 +1,15 @@
 // middleware.js
 import { NextResponse } from "next/server";
 
+
+
+
 export function middleware(request) {
   console.log("\n=== MIDDLEWARE TRIGGERED ===");
   console.log("Request URL:", request.url);
   console.log("Pathname762746724:", request.nextUrl.pathname);
+
+  
 
   // 1. Check for token
   const token = request.cookies.get("connect.sid")?.value;

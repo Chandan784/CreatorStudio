@@ -14,6 +14,9 @@ import CreatorDetailsPgae from "./details/page";
 import CreatorTrackerPage from "./tracker/page";
 import CreatorPlansPage from "./plan/page";
 import CreatorProjectDetailsPage from "./project-details/page";
+import {useSelector} from "react-redux";
+import NotLoggedIn from "@/components/layout/NotLoggedIn";
+
 
 const sidebarOptions = [
   {
@@ -33,6 +36,8 @@ const sidebarOptions = [
   },
 ];
 
+
+
 function DashboardLayoutContent() {
   const router = useRouter();
   const pathname = usePathname();
@@ -41,7 +46,16 @@ function DashboardLayoutContent() {
   const projectId = searchParams.get("projectId");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  let {isLoggedIn} = useSelector( (state) => state.auth)
+  if(!isLoggedIn) {
+    return <NotLoggedIn />
+  }
+    
+  
+ 
+
   const getActivePage = () => {
+    
     switch (pathname) {
       case "/creator/dashboard":
         return <CreatorDashboardPage />;

@@ -7,7 +7,7 @@ import axios from "axios";
 import Image from "next/image";
 
 import { useSelector, useDispatch } from "react-redux";
-import { forgotUserPassword, loginUser, registerUser, resetUserPassword } from "@/store/slice/authSlice";
+import { forgotUserPassword, loginUser, registerUser, resetUserPassword } from "@/store/api/auth";
 import LoginForm from "@/components/layout/LoginForm";
 import SignupForm from "@/components/layout/SignupForm";
 import ForgotPasswordForm from "@/components/layout/ForgotPasswordForm";
@@ -49,24 +49,10 @@ export default function Authentication() {
         const res = await dispatch(loginUser({ email, password })).unwrap();
         setMessage(res.message);
         const userRole = res.user?.role;
-
-        switch (userRole) {
-          case "studioOwner":
-            router.push("/studio-owner/dashboard");
-            break;
-          case "influencer":
-            router.push("/creator/dashboard");
-            break;
-          case "business":
-            router.push("/creator");
-            break;
-          case "agency":
-            router.push("/dashboard");
-            break;
-          default:
-            router.push("/creator");
-            break;
+        if(message === "Login successful") {
+          router.push(`/creator`);
         }
+        
       } else {
         await dispatch(
           registerUser({
