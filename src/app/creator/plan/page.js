@@ -2,27 +2,29 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { getUserPlansById } from "@/store/api/plan";
 
 export default function CreatorPlansPage() {
-  const [plans, setPlans] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  const {loading, plans} = useSelector((state) => state.plan);
+  
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/plans/user/67d173ffd0f78d32ad046925`)
-      .then((response) => {
-        setPlans(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching plans:", error);
-        setLoading(false);
-      });
+     const getUserPlanById = async () => {
+       const res = await dispatch(getUserPlansById())
+       console.log(res, "Response");
+       
+     }
+     getUserPlanById();
+    
   }, []);
+
+
+
 
   const handleTrackerClick = (planId) => {
     router.push(`/creator/tracker?planId=${planId}`);

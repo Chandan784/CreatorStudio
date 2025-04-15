@@ -7,7 +7,7 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "@/store/store";
 
 const geistSans = Geist({
@@ -24,6 +24,7 @@ export default function RootLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
 
+ 
   // useEffect(() => {
   //   const isAuthenticated = checkAuth(); // Implement your auth check logic
 
