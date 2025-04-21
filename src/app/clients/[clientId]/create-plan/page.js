@@ -1,6 +1,8 @@
 "use client";
+import { createPlan } from "@/store/api/plan";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import {useDispatch} from "react-redux";
 
 export default function CreatePlanPage({ params }) {
   let { clientId } = params;
@@ -10,6 +12,7 @@ export default function CreatePlanPage({ params }) {
   const [frequency, setFrequency] = useState("monthly");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+  const dispatch = useDispatch();
 
   // State for deliverables
   const [deliverables, setDeliverables] = useState([]); // List of deliverables fetched from the backend
@@ -167,6 +170,8 @@ export default function CreatePlanPage({ params }) {
     handleDeleteDeliverable(index);
   };
 
+  
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -183,14 +188,8 @@ export default function CreatePlanPage({ params }) {
     console.log("New Plan to be saved:", newPlan); // Debugging log
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/plans`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newPlan),
-      });
+      const response = await dispatch(createPlan()).unwrap();
+      setPlanName(response.data.message)
 
       if (!response.ok) {
         throw new Error("Failed to save plan");
