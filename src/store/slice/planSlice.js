@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserPlansById } from "../api/plan";
+import { getUserPlansById, createPlan } from "../api/plan";
 
 const initialState = {
     plans: [],
@@ -14,6 +14,7 @@ const planSlice = createSlice({
     reducers : {},
     extraReducers :  (builder) => {
         builder
+        //User Plan by Id
         .addCase( getUserPlansById.pending, (state) => {
             state.loading = true;
             state.message = "Plan is loading";
@@ -29,6 +30,21 @@ const planSlice = createSlice({
             state.error = action.payload;
         })
         
+        // Create and Save plans
+        .addCase(createPlan.pending, (state) =>{
+            state.loading = true;
+            state.message = "New Plan saving" ;
+        })
+        .addCase(createPlan.fulfilled, (state, action) => {
+            state.loading = false;
+            state.plans = action.payload;
+            state.message = "New Plan Saved";
+        })
+        .addCase(createPlan.rejected, (state, action) => {
+            state.message = action.payload;
+            state.error = action.payload.message;
+        })
+
     }
 })
 
