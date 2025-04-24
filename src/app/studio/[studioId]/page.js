@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useDispatch } from "react-redux";
 import {
   FaMapMarkerAlt,
   FaStar,
@@ -17,6 +18,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { getStudioAvailabilityByDate, getStudioBookingById } from "@/store/api/studio";
 
 // Studio Data (Hardcoded for now)
 const studio = {
@@ -74,6 +76,7 @@ export default function StudioDetails() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
   // Fetch availability for the selected date
   const fetchAvailability = async (date) => {
@@ -90,9 +93,13 @@ export default function StudioDetails() {
       console.log("Fetching availability for date (UTC):", formattedDate);
 
       // Fetch availability from the backend
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/${studio.id}/${formattedDate}`
-      );
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/availability/${studio.id}/${formattedDate}`
+      // );
+      dispatch(getStudioAvailabilityByDate({
+          studioId: studio.id,
+          date: formattedDate,
+        }));
 
       if (response.data.success) {
         console.log("Backend response:", response.data);
@@ -173,10 +180,11 @@ export default function StudioDetails() {
       };
 
       // Make the API call to create a booking
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/bookings`,
-        payload
-      );
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/bookings`,
+      //   payload
+      // );
+      dispatch(getStudioBookingById(bookingPayload));
 
       if (response.data.success) {
         alert("Booking confirmed!");
@@ -319,15 +327,14 @@ export default function StudioDetails() {
                   {availability.slots.map((slot) => (
                     <button
                       key={slot.startTime}
-                      className={`p-2 border rounded transition-all ${
-                        slot.enabled
-                          ? slot.booked
-                            ? "bg-red-100 cursor-not-allowed"
-                            : selectedSlots.includes(slot)
+                      className={`p-2 border rounded transition-all ${slot.enabled
+                        ? slot.booked
+                          ? "bg-red-100 cursor-not-allowed"
+                          : selectedSlots.includes(slot)
                             ? "bg-purple-600 text-white"
                             : "bg-green-100 hover:bg-green-200"
-                          : "bg-gray-100 cursor-not-allowed"
-                      }`}
+                        : "bg-gray-100 cursor-not-allowed"
+                        }`}
                       onClick={() => handleSlotSelection(slot)}
                       disabled={!slot.enabled || slot.booked}
                     >

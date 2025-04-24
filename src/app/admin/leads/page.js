@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import {
   User,
@@ -16,6 +17,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
+import { getAdminLeadsById, getAdminLeadsUpdatesById } from "@/store/api/leads";
 
 export default function LeadsPage() {
   const [leadsData, setLeadsData] = useState([]);
@@ -31,15 +33,19 @@ export default function LeadsPage() {
   const [callStatusFilter, setCallStatusFilter] = useState("");
   const [callbackRequiredFilter, setCallbackRequiredFilter] = useState("");
 
+  const dispatch = useDispatch();
   // Fetch leads data on component mount
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads`
-        );
-        setLeadsData(data);
-        setFilteredLeads(data); // Initialize filtered leads with all data
+        const res = await dispatch(getAdminLeadsById());
+        const leads = res?.payload;
+        if (leads) {
+          setLeadsData(leads);
+          setFilteredLeads(leads);
+        } else {
+          console.warn("No leads data received");
+        }
       } catch (error) {
         console.error("Error fetching leads:", error);
       }
@@ -48,6 +54,7 @@ export default function LeadsPage() {
     fetchLeads();
   }, []);
 
+
   // Function to handle editing a lead
   const handleEditClick = (lead) => {
     setEditingLeadId(lead._id);
@@ -55,15 +62,37 @@ export default function LeadsPage() {
   };
 
   // Function to handle saving edited lead
+  // const handleSaveClick = async (id) => {
+  //   try {
+  //     await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads/${id}`, editedLead);
+  //     setLeadsData((prev) =>
+  //       prev.map((lead) => (lead._id === id ? editedLead : lead))
+  //     );
+  //     setFilteredLeads((prev) =>
+  //       prev.map((lead) => (lead._id === id ? editedLead : lead))
+  //     );
+  //     setEditingLeadId(null); // Exit editing mode
+  //   } catch (error) {
+  //     console.error("Error updating lead:", error);
+  //   }
+  // };
   const handleSaveClick = async (id) => {
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/leads/${id}`, editedLead);
-      setLeadsData((prev) =>
-        prev.map((lead) => (lead._id === id ? editedLead : lead))
-      );
-      setFilteredLeads((prev) =>
-        prev.map((lead) => (lead._id === id ? editedLead : lead))
-      );
+      const res = await dispatch(getAdminLeadsUpdatesById({ id, editedLead }));
+      const updatedLead = res?.payload;
+
+      if (updatedLead) {
+        // Update the local state with the updated lead
+        setLeadsData((prev) =>
+          prev.map((lead) => (lead._id === id ? updatedLead : lead))
+        );
+        setFilteredLeads((prev) =>
+          prev.map((lead) => (lead._id === id ? updatedLead : lead))
+        );
+      } else {
+        console.warn("No updated lead received");
+      }
+
       setEditingLeadId(null); // Exit editing mode
     } catch (error) {
       console.error("Error updating lead:", error);
@@ -179,43 +208,43 @@ export default function LeadsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Interest Level Colors */}
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-red-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-red-300 rounded-full"></div>
               <span>High Interest</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-yellow-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-yellow-300 rounded-full"></div>
               <span>Medium Interest</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-green-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-green-300 rounded-full"></div>
               <span>Low Interest</span>
             </div>
 
             {/* Proposal Status Colors */}
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-blue-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-blue-300 rounded-full"></div>
               <span>Pending Proposal</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-purple-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-purple-300 rounded-full"></div>
               <span>Sent Proposal</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-green-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-green-400 rounded-full"></div>
               <span>Approved Proposal</span>
             </div>
 
             {/* Call Status Colors */}
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-gray-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
               <span>Not Contacted</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-blue-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
               <span>Contacted</span>
             </div>
             <div className="flex items-center space-x-2 justify-center">
-              <div className="w-4 h-4 bg-yellow-100 rounded-full"></div>
+              <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
               <span>Follow Up Required</span>
             </div>
           </div>
@@ -323,7 +352,7 @@ export default function LeadsPage() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
                 {/* Point of Contact */}
-                <div>
+                <div className="p-2">
                   <label className="text-sm text-gray-500">
                     Point of Contact
                   </label>
@@ -353,7 +382,7 @@ export default function LeadsPage() {
                 </div>
 
                 {/* User Name */}
-                <div>
+                <div className="p-2">
                   <label className="text-sm text-gray-500">User Name</label>
                   <p className="font-semibold">{lead.userId.name}</p>
                 </div>
